@@ -14,7 +14,7 @@ export default function Blog() {
         <link rel="canonical" href="https://amitjha.in/blog" />
       </Helmet>
       <div 
-        className="container mx-auto px-4 py-28 lg:py-32 flex-grow"
+        className="container mx-auto px-4 py-28 lg:py-32"
         role="main"
         aria-label="Blog content"
       >

@@ -52,38 +52,43 @@ const expertiseAreas = [
   }
 ];
 
-export function TechExpertise() {
+export default function TechExpertise() {
   return (
-    <section className="py-16 bg-white dark:bg-slate-800" id="expertise">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Technical Expertise</h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl">Comprehensive skill set across modern technologies and practices</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <section className="py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-[#022A5E] dark:text-blue-100">
+          Technical Expertise
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {expertiseAreas.map((area) => (
-            <div 
-              key={area.title} 
-              className="group p-6 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-300 shadow-sm hover:shadow-md"
+            <div
+              key={area.title}
+              className="group p-6 bg-white/50 dark:bg-[#022A5E]/5 rounded-xl shadow-md hover:shadow-lg 
+                transition-all duration-300 hover:scale-[1.02] border border-slate-100 dark:border-[#034694]/10 
+                hover:border-[#022A5E]/20 dark:hover:border-[#034694]/20 backdrop-blur-sm"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg flex items-center justify-center mb-4 shadow-md group-hover:shadow-lg transition-shadow">
-                <area.icon className="text-white" size={24} />
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#022A5E] to-[#034694] rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                  <area.icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold ml-3 text-slate-800 dark:text-blue-50">
+                  {area.title}
+                </h3>
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                {area.title}
-              </h3>
-              <ul className="space-y-2 mb-4">
-                {area.skills.map((skill) => (
-                  <li key={skill} className="text-slate-600 dark:text-slate-300 flex items-center">
-                    <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2 flex-shrink-0"></span>
-                    {skill}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 mb-4">
                 {area.description}
               </p>
+              <div className="flex flex-wrap gap-2">
+                {area.skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1 text-sm bg-[#022A5E]/5 dark:bg-[#034694]/10 text-[#022A5E] dark:text-blue-100 
+                      rounded-full hover:bg-[#022A5E]/10 dark:hover:bg-[#034694]/20 transition-colors duration-300"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
           ))}
         </div>

@@ -90,75 +90,115 @@ export default function About() {
           </div>
 
           <div className="lg:col-span-8">
-            <div className="prose dark:prose-invert max-w-none mb-12">
-              <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-                With over 16 years of experience in software engineering, I've dedicated my career to building robust, 
-                scalable solutions that drive business success. As a Distinguished Engineer, I combine deep technical 
-                expertise with strategic thinking to tackle complex challenges in the ever-evolving technology landscape.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 mb-12">
-              {skills.map((skill, index) => (
-                <div 
-                  key={index}
-                  className="p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800"
-                >
-                  <div className="mb-4">{skill.icon}</div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                    {skill.title}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-300">
-                    {skill.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
-                Technical Proficiency
+            <div className="prose dark:prose-invert max-w-none">
+              <h2 className="text-3xl font-bold text-[#022A5E] dark:text-blue-200 mb-6">
+                Technology Leader & Solution Architect
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              <div className="space-y-6 text-slate-600 dark:text-slate-300">
+                <p className="text-lg leading-relaxed">
+                  An accomplished technology leader and Solution Architect with over 16+ years of experience in driving enterprise-level 
+                  technical solutions. Specializing in architecting complex, mission-critical systems across Banking & Finance, 
+                  Healthcare, eCommerce, and Staffing & Recruitment sectors, with a focus on AI integration, cloud technologies, 
+                  and Big Data platforms.
+                </p>
+
+                <div className="my-8">
+                  <h3 className="text-xl font-semibold text-[#022A5E] dark:text-blue-200 mb-4">
+                    Key Areas of Excellence
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div>
+                      <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                        AI & Cloud Innovation
+                      </h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
+                        Led AI integration using AWS Bedrock, implementing cutting-edge solutions in AML and fraud detection systems.
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                        Technical Architecture
+                      </h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
+                        Expertise in microservices, cloud-native architectures, and enterprise-scale distributed systems.
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                        Search & Big Data
+                      </h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
+                        Advanced implementation of ElasticSearch, Hadoop, and Apache Spark for high-scale data processing.
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                        Security & Compliance
+                      </h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
+                        Implementation of robust security frameworks and compliance standards in regulated industries.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Enterprise Development</h3>
-                  <ul className="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300">
-                    <li>Spring Framework & Spring Boot</li>
-                    <li>Microservices Architecture</li>
-                    <li>RESTful APIs & GraphQL</li>
-                    <li>Enterprise Integration Patterns</li>
-                    <li>Python & Django/Flask</li>
+                  <h3 className="text-xl font-semibold text-[#022A5E] dark:text-blue-200 mb-4">
+                    Professional Impact
+                  </h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                      <span>Spearheaded AWS Cloud Infrastructure Design and microservices adoption, ensuring high availability and operational efficiency.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                      <span>Led multiple end-to-end product development initiatives in eCommerce, banking, and healthcare sectors.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                      <span>Developed real-time transaction monitoring systems for AML and fraud detection using AI and machine learning.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                      <span>Drove Agile transformation and fostered a culture of continuous learning and innovation.</span>
+                    </li>
                   </ul>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Big Data & Analytics</h3>
-                  <ul className="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300">
-                    <li>Apache Spark & Hadoop Ecosystem</li>
-                    <li>Elasticsearch & ELK Stack</li>
-                    <li>Data Warehousing & ETL</li>
-                    <li>Real-time Analytics</li>
-                    <li>Apache Kafka</li>
-                    <li>Python Data Science Stack (NumPy, Pandas)</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Cloud & DevOps</h3>
-                  <ul className="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300">
-                    <li>AWS Cloud Services</li>
-                    <li>Docker & Kubernetes</li>
-                    <li>CI/CD Pipelines</li>
-                    <li>Infrastructure as Code</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Database Technologies</h3>
-                  <ul className="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300">
-                    <li>SQL (Oracle, PostgreSQL, MySQL)</li>
-                    <li>NoSQL (MongoDB, Cassandra)</li>
-                    <li>Database Design & Optimization</li>
-                    <li>Data Modeling & Schema Design</li>
-                    <li>Hbase, Parquet</li>
-                  </ul>
+
+                <p className="text-lg leading-relaxed mb-12">
+                  Committed to driving technical excellence and innovation, with a focus on integrating AI solutions into 
+                  real-world applications. Proven track record in leading teams to create impactful, scalable products that 
+                  solve complex business challenges while ensuring sustained growth and operational success.
+                </p>
+
+                <h3 className="text-2xl font-bold text-[#022A5E] dark:text-blue-200 mb-6">
+                  Technical Expertise
+                </h3>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  {skills.map((skill, index) => (
+                    <div 
+                      key={index}
+                      className="p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800
+                        hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                    >
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#022A5E] to-[#034694] rounded-lg flex items-center justify-center shadow-md mb-4">
+                        {React.cloneElement(skill.icon, { className: "w-6 h-6 text-white" })}
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                        {skill.title}
+                      </h3>
+                      <p className="text-slate-600 dark:text-slate-300">
+                        {skill.description}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

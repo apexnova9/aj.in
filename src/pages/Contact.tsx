@@ -15,13 +15,11 @@ export default function Contact() {
         <link rel="canonical" href="https://amitjha.in/contact" />
       </Helmet>
       <div 
-        className="container mx-auto px-4 py-28 lg:py-32 flex-grow"
+        className="container mx-auto px-4 py-28 lg:py-32"
         role="main"
         aria-label="Contact page content"
       >
-        <div className="flex-grow">
-          <ContactComponent />
-        </div>
+        <ContactComponent />
       </div>
     </>
   );

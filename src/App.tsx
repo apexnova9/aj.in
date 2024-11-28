@@ -23,16 +23,18 @@ function App() {
     <HelmetProvider>
       <Router>
         <ThemeProvider>
-          <div className="min-h-screen bg-slate-50 dark:bg-slate-900 dark:text-white transition-colors flex flex-col">
+          <div className="flex flex-col min-h-screen bg-white dark:bg-[#011633] text-slate-900 dark:text-slate-100 transition-colors duration-300">
             <TopNavigation />
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/contact" element={<Contact />} />
-              </Routes>
-            </Suspense>
+            <main className="flex-grow pt-20"> 
+              <Suspense fallback={<PageLoader />}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/contact" element={<Contact />} />
+                </Routes>
+              </Suspense>
+            </main>
             <Footer />
           </div>
         </ThemeProvider>

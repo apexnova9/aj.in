@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationCard } from '../cards/NavigationCard';
-import { TechExpertise } from '../sections/TechExpertise';
+import TechExpertise from '../sections/TechExpertise';
 import { Timeline } from '../sections/Timeline';
 import { Portfolio } from '../sections/Portfolio';
 import { Testimonials } from '../sections/Testimonials';
