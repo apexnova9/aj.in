@@ -3,46 +3,52 @@ import { Mail, Linkedin, Github, FileText } from 'lucide-react';
 
 export function Contact() {
   return (
-    <section className="py-24 bg-slate-900" id="contact">
+    <section className="py-24 bg-slate-50 dark:bg-slate-900 transition-colors" id="contact">
       <div className="container mx-auto px-6">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-8">Let's Connect</h2>
-          <p className="text-slate-300 mb-12">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Let's Connect</h2>
+          <p className="text-slate-600 dark:text-slate-300 mb-12">
             Interested in discussing your next project or technical challenges?
             I'm always open to new opportunities and collaborations.
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <a
-              href="mailto:contact@example.com"
-              className="flex flex-col items-center p-6 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors"
+              href="mailto:your.email@example.com"
+              className="flex flex-col items-center p-6 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
             >
-              <Mail className="text-blue-400 mb-3" size={24} />
-              <span className="text-white">Email</span>
+              <Mail className="text-blue-500 mb-3" size={24} />
+              <span className="text-slate-900 dark:text-white">Email</span>
             </a>
             
             <a
-              href="#"
-              className="flex flex-col items-center p-6 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors"
+              href="https://linkedin.com/in/your-profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center p-6 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
             >
-              <Linkedin className="text-blue-400 mb-3" size={24} />
-              <span className="text-white">LinkedIn</span>
+              <Linkedin className="text-blue-500 mb-3" size={24} />
+              <span className="text-slate-900 dark:text-white">LinkedIn</span>
             </a>
             
             <a
-              href="#"
-              className="flex flex-col items-center p-6 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors"
+              href="https://github.com/your-username"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center p-6 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
             >
-              <Github className="text-blue-400 mb-3" size={24} />
-              <span className="text-white">GitHub</span>
+              <Github className="text-blue-500 mb-3" size={24} />
+              <span className="text-slate-900 dark:text-white">GitHub</span>
             </a>
             
             <a
-              href="#"
-              className="flex flex-col items-center p-6 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors"
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center p-6 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
             >
-              <FileText className="text-blue-400 mb-3" size={24} />
-              <span className="text-white">Resume</span>
+              <FileText className="text-blue-500 mb-3" size={24} />
+              <span className="text-slate-900 dark:text-white">Resume</span>
             </a>
           </div>
         </div>

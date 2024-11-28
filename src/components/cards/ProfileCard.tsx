@@ -3,7 +3,7 @@ import { Github, Linkedin, Mail, FileText } from 'lucide-react';
 
 export function ProfileCard() {
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm overflow-hidden">
       <div className="aspect-square relative">
         <img
           src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"
@@ -18,23 +18,31 @@ export function ProfileCard() {
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg transition-colors"
           >
-            <Github size={24} />
+            <Github className="w-5 h-5" />
           </a>
           <a
             href="https://linkedin.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg transition-colors"
           >
-            <Linkedin size={24} />
+            <Linkedin className="w-5 h-5" />
           </a>
           <a
             href="mailto:contact@example.com"
-            className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg transition-colors"
           >
-            <Mail size={24} />
+            <Mail className="w-5 h-5" />
+          </a>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg transition-colors"
+          >
+            <FileText className="w-5 h-5" />
           </a>
         </div>
         

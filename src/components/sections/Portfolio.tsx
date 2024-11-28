@@ -24,10 +24,10 @@ const projects = [
 export function Portfolio() {
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-8">Featured Projects</h2>
+      <h2 className="text-2xl font-bold mb-8 dark:text-white">Featured Projects</h2>
       <div className="grid gap-8">
         {projects.map((project) => (
-          <div key={project.title} className="group relative overflow-hidden rounded-xl bg-slate-50">
+          <div key={project.title} className="group relative overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-800">
             <div className="aspect-video">
               <img
                 src={project.image}
@@ -36,13 +36,13 @@ export function Portfolio() {
               />
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-              <p className="text-slate-600 mb-4">{project.description}</p>
+              <h3 className="text-xl font-semibold mb-2 dark:text-white">{project.title}</h3>
+              <p className="text-slate-600 dark:text-slate-300 mb-4">{project.description}</p>
               <div className="flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm"
+                    className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full text-sm"
                   >
                     {tag}
                   </span>

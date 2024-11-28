@@ -22,15 +22,15 @@ const testimonials = [
 export function Testimonials() {
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-8">Client Testimonials</h2>
+      <h2 className="text-2xl font-bold mb-8 dark:text-white">Client Testimonials</h2>
       <div className="grid gap-6">
         {testimonials.map((testimonial, index) => (
-          <div key={index} className="bg-slate-50 p-6 rounded-xl relative">
-            <Quote className="absolute top-4 right-4 text-blue-100" size={48} />
-            <p className="text-slate-600 mb-6 relative z-10">{testimonial.text}</p>
+          <div key={index} className="bg-slate-50 dark:bg-slate-800 p-6 rounded-xl relative">
+            <Quote className="absolute top-4 right-4 text-blue-100 dark:text-blue-900" size={48} />
+            <p className="text-slate-600 dark:text-slate-300 mb-6 relative z-10">{testimonial.text}</p>
             <div>
-              <div className="font-semibold">{testimonial.author}</div>
-              <div className="text-slate-500 text-sm">{testimonial.role}</div>
+              <div className="font-semibold dark:text-white">{testimonial.author}</div>
+              <div className="text-slate-500 dark:text-slate-400 text-sm">{testimonial.role}</div>
             </div>
           </div>
         ))}

@@ -35,10 +35,10 @@ export function RightColumn({ activeSection, onSectionChange }: RightColumnProps
 
   return (
     <div>
-      <div className="bg-white rounded-xl shadow-sm p-4 mb-8 overflow-x-auto">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-4 mb-8 overflow-x-auto">
         <NavigationCard activeSection={activeSection} onSectionChange={onSectionChange} />
       </div>
-      <div className="bg-white rounded-xl shadow-sm p-8">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-8">
         {renderContent()}
       </div>
     </div>
