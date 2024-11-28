@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { Link, useLocation } from 'react-router-dom';
 
 export function TopNavigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,18 +19,11 @@ export function TopNavigation() {
   }, []);
 
   const menuItems = [
-    { name: 'About Me', href: '#about' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Home', path: '/' },
+    { name: 'About Me', path: '/about' },
+    { name: 'Blog', path: '/blog' },
+    { name: 'Contact', path: '/contact' }
   ];
-
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
-  };
 
   return (
     <nav className={`fixed w-full z-50 transition-all ${
@@ -36,21 +31,24 @@ export function TopNavigation() {
     }`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          <div className="text-white">
+          <Link to="/" className="text-white">
             <div className="font-bold text-2xl">Amit Jha</div>
             <div className="text-sm text-slate-300">Architecting Digital Excellence</div>
-          </div>
+          </Link>
           
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center space-x-8">
               {menuItems.map((item) => (
-                <button
+                <Link
                   key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className="text-slate-300 hover:text-white transition-colors"
+                  to={item.path}
+                  className={`text-slate-300 hover:text-white transition-colors ${
+                    location.pathname === item.path ? 'text-white' : ''
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
-                </button>
+                </Link>
               ))}
             </div>
             
@@ -80,13 +78,16 @@ export function TopNavigation() {
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4">
             {menuItems.map((item) => (
-              <button
+              <Link
                 key={item.name}
-                onClick={() => scrollToSection(item.href)}
-                className="block w-full text-left py-2 text-slate-300 hover:text-white transition-colors"
+                to={item.path}
+                className={`block py-2 text-slate-300 hover:text-white transition-colors ${
+                  location.pathname === item.path ? 'text-white' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
-              </button>
+              </Link>
             ))}
           </div>
         )}
