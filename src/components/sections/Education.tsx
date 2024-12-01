@@ -3,15 +3,9 @@ import React from 'react';
 export function Education() {
   const education = [
     {
-      degree: 'Master of Science in Computer Science',
-      school: 'Stanford University',
-      year: '2008',
-      description: 'Specialized in Artificial Intelligence and Distributed Systems'
-    },
-    {
-      degree: 'Bachelor of Engineering in Computer Science',
-      school: 'MIT',
-      year: '2006',
+      degree: 'Bachelor of Science in Information Technology',
+      school: 'Sikkim Manipal University - DE',
+      year: '2017',
       description: 'Focus on Software Engineering and Database Systems'
     }
   ];

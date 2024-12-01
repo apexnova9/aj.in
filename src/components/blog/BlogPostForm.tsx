@@ -138,15 +138,14 @@ function EditorToolbar({ editor }: { editor: any }) {
 }
 
 export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormProps) {
-  const [formData, setFormData] = useState<BlogPostInput>(
-    initialData || {
-      title: '',
-      content: '',
-      excerpt: '',
-      tags: [],
-      status: 'draft',
-    }
-  );
+  const [formData, setFormData] = useState<BlogPostInput>({
+    title: initialData?.title || '',
+    content: initialData?.content || '',
+    excerpt: initialData?.excerpt || '',
+    tags: initialData?.tags || [],
+    status: initialData?.status || 'draft',
+    featured_image: initialData?.featured_image || null,
+  });
   const [tagInput, setTagInput] = useState('');
 
   const editor = useEditor({
@@ -254,17 +253,34 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
       </div>
 
       <div>
-        <label htmlFor="coverImage" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-          Cover Image URL
+        <label htmlFor="featured_image" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          Featured Image
         </label>
         <input
-          type="url"
-          id="coverImage"
-          name="coverImage"
-          value={formData.coverImage || ''}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-[#034694] focus:outline-none focus:ring-1 focus:ring-[#034694] dark:text-white"
+          type="file"
+          id="featured_image"
+          name="featured_image"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setFormData((prev) => ({ ...prev, featured_image: file }));
+            }
+          }}
+          className="mt-1 block w-full text-sm text-slate-500 dark:text-slate-400
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-md file:border-0
+            file:text-sm file:font-medium
+            file:bg-[#022A5E]/10 file:text-[#022A5E]
+            file:dark:bg-[#034694]/20 file:dark:text-[#034694]
+            hover:file:bg-[#022A5E]/20
+            dark:hover:file:bg-[#034694]/30"
         />
+        {formData.featured_image && (
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            Selected file: {formData.featured_image instanceof File ? formData.featured_image.name : formData.featured_image}
+          </p>
+        )}
       </div>
 
       <div>

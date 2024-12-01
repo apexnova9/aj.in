@@ -2,23 +2,23 @@ import React from 'react';
 
 export function Certificates() {
   const certificates = [
-    {
+   /* {
       name: 'AWS Solutions Architect Professional',
       issuer: 'Amazon Web Services',
       year: '2023',
       id: 'AWS-SAP-123456'
+    },*/
+    {
+      name: 'Diploma in Computer Science',
+      issuer: 'APTECH',
+      year: '2003',
+      id: '0005938'
     },
     {
-      name: 'Google Cloud Professional Architect',
-      issuer: 'Google Cloud',
-      year: '2022',
-      id: 'GCP-PA-789012'
-    },
-    {
-      name: 'Azure Solutions Architect Expert',
-      issuer: 'Microsoft',
-      year: '2022',
-      id: 'AZ-305'
+      name: 'Certificate in Computing',
+      issuer: 'IGNOU',
+      year: '2002',
+      id: '0027363'
     }
   ];
 

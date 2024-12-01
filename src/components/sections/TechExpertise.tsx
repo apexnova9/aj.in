@@ -3,10 +3,22 @@ import { Code2, Cloud, Database, Brain, Network, Layers, Cpu, GitGraph, Settings
 
 const expertiseAreas = [
   {
-    icon: Code2,
-    title: 'Programming Languages',
-    skills: ['Java (Core, Enterprise)', 'JavaScript', 'Python'],
-    description: 'Expert in modern development practices and enterprise applications.'
+    icon: Cpu,
+    title: 'Technology Leadership',
+    skills: ['Enterprise Architecture', 'Team Leadership', 'Technical Strategy', 'Innovation Management'],
+    description: 'Leading technical teams and driving organizational transformation.'
+  },
+  {
+    icon: Brain,
+    title: 'AI & ML',
+    skills: ['Prompt Engineering', 'Machine Learning', 'Neural Networks'],
+    description: 'Implementing cutting-edge AI solutions for business problems.'
+  },
+  {
+    icon: Database,
+    title: 'Data Engineering',
+    skills: ['Apache Spark', 'ElasticSearch', 'Vector Databases', 'Apache Kafka'],
+    description: 'Building robust data processing pipelines and storage solutions.'
   },
   {
     icon: GitGraph,
@@ -21,18 +33,6 @@ const expertiseAreas = [
     description: 'Designing and implementing scalable cloud solutions.'
   },
   {
-    icon: Database,
-    title: 'Data Engineering',
-    skills: ['Apache Spark', 'ElasticSearch', 'Vector Databases', 'Apache Kafka'],
-    description: 'Building robust data processing pipelines and storage solutions.'
-  },
-  {
-    icon: Brain,
-    title: 'AI & ML',
-    skills: ['Prompt Engineering', 'Machine Learning', 'Neural Networks'],
-    description: 'Implementing cutting-edge AI solutions for business problems.'
-  },
-  {
     icon: Layers,
     title: 'Big Data',
     skills: ['Hadoop', 'PostgreSQL', 'MongoDB', 'Data Lakes'],
@@ -41,14 +41,14 @@ const expertiseAreas = [
   {
     icon: Settings,
     title: 'DevOps & Infrastructure',
-    skills: ['Docker', 'Kubernetes', 'CI/CD', 'Infrastructure as Code'],
+    skills: ['Docker', 'Kubernetes', 'CI/CD', 'Infrastructure as Code', 'Jenkins', 'Ansible'],
     description: 'Implementing modern DevOps practices and infrastructure automation.'
   },
   {
-    icon: Cpu,
-    title: 'Technology Leadership',
-    skills: ['Enterprise Architecture', 'Team Leadership', 'Technical Strategy', 'Innovation Management'],
-    description: 'Leading technical teams and driving organizational transformation.'
+    icon: Code2,
+    title: 'Programming Languages',
+    skills: ['Java (Core, Enterprise)', 'Spring Framework', 'Scala', 'Python', 'PySpark and Spark SQL', 'JavaScript', 'Shell Scripting', 'SQL', 'HTML', 'CSS'],
+    description: 'Proficient in multiple programming languages and frameworks.'
   }
 ];
 

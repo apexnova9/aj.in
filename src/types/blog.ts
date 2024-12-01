@@ -1,25 +1,20 @@
 export interface BlogPost {
-  id: string;
+  id: number;
   title: string;
   slug: string;
   content: string;
   excerpt: string;
-  coverImage?: string;
-  tags: string[];
-  publishedAt: string;
-  updatedAt: string;
+  featured_image?: string;
   status: 'draft' | 'published';
-  author: {
-    name: string;
-    avatar?: string;
-  };
+  created_at: string;
+  updated_at: string;
 }
 
 export interface BlogPostInput {
   title: string;
   content: string;
   excerpt: string;
-  coverImage?: string;
-  tags: string[];
+  featured_image?: File | string;
   status: 'draft' | 'published';
+  tags: string[];
 }

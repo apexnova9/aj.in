@@ -7,7 +7,7 @@ export default function About() {
     {
       icon: <Code2 className="w-8 h-8 text-blue-500" aria-hidden="true" />,
       title: "Core Technologies",
-      description: "Expert in Java Core & Enterprise Stack with 16 years of hands-on experience building scalable applications."
+      description: "Expert in Java Core & Enterprise Stack with 14+ years of hands-on experience building scalable applications."
     },
     {
       icon: <GitGraph className="w-8 h-8 text-rose-500" aria-hidden="true" />,
@@ -45,7 +45,7 @@ export default function About() {
     <>
       <Helmet>
         <title>About Amit Jha - Professional Background & Expertise</title>
-        <meta name="description" content="Learn about Amit Jha's 16+ years of experience in Java Enterprise, Big Data, AI/ML, and Cloud Architecture. Discover his expertise in building scalable solutions." />
+        <meta name="description" content="Learn about Amit Jha's 14+ years of experience in Java Enterprise, Big Data, AI/ML, and Cloud Architecture. Discover his expertise in building scalable solutions." />
         <meta name="keywords" content="About Amit Jha, Java Expert, Big Data Engineer, Python Developer, Cloud Architect, Enterprise Solutions" />
         <meta property="og:title" content="About Amit Jha - Professional Background" />
         <meta property="og:description" content="Distinguished Engineer with 16+ years of experience in Java, Big Data, and Cloud Architecture." />
@@ -64,7 +64,7 @@ export default function About() {
                 Distinguished Engineer
               </h1>
               <p className="text-lg text-slate-600 dark:text-slate-300 mb-8">
-                Transforming complex challenges into elegant solutions with 16+ years of expertise
+                Transforming complex challenges into elegant solutions with 14+ years of expertise
               </p>
               <div className="space-y-4">
                 <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
@@ -97,7 +97,7 @@ export default function About() {
               
               <div className="space-y-6 text-slate-600 dark:text-slate-300">
                 <p className="text-lg leading-relaxed">
-                  An accomplished technology leader and Solution Architect with over 16+ years of experience in driving enterprise-level 
+                  An accomplished technology leader and Solution Architect with over 14+ years of experience in driving enterprise-level 
                   technical solutions. Specializing in architecting complex, mission-critical systems across Banking & Finance, 
                   Healthcare, eCommerce, and Staffing & Recruitment sectors, with a focus on AI integration, cloud technologies, 
                   and Big Data platforms.

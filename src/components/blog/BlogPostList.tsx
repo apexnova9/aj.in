@@ -54,7 +54,7 @@ export function BlogPostList({ posts, onEdit, onDelete, onView }: BlogPostListPr
                 </span>
               </td>
               <td className="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
-                {new Date(post.publishedAt).toLocaleDateString()}
+                {new Date(post.created_at).toLocaleDateString()}
               </td>
               <td className="px-6 py-4 text-right text-sm font-medium space-x-3">
                 <button

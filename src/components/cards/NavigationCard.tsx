@@ -10,8 +10,8 @@ export function NavigationCard({ activeSection, onSectionChange }: NavigationCar
   const menuItems: { id: ContentSection; label: string }[] = [
     { id: 'expertise', label: 'Technical Expertise' },
     { id: 'experience', label: 'Experience' },
-    { id: 'portfolio', label: 'Portfolio' },
-    { id: 'recommendations', label: 'Recommendations' },
+    //{ id: 'portfolio', label: 'Portfolio' },
+    //{ id: 'recommendations', label: 'Recommendations' },
     { id: 'education', label: 'Education' },
     { id: 'certificates', label: 'Certificates' }
   ];

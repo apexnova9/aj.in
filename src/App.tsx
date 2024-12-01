@@ -14,6 +14,8 @@ const Blog = React.lazy(() => import('./pages/Blog'));
 const Contact = React.lazy(() => import('./pages/Contact'));
 const AdminLogin = React.lazy(() => import('./pages/admin/Login'));
 const AdminDashboard = React.lazy(() => import('./pages/admin/Dashboard'));
+const BlogManagement = React.lazy(() => import('./pages/admin/BlogManagement'));
+const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 
 // Loading component
 const PageLoader = () => (
@@ -36,6 +38,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/blog" element={<Blog />} />
+                    <Route path="/blog/:slug" element={<BlogPost />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/admin/login" element={<AdminLogin />} />
                     <Route 
@@ -43,6 +46,14 @@ function App() {
                       element={
                         <ProtectedRoute>
                           <AdminDashboard />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/admin/blog" 
+                      element={
+                        <ProtectedRoute>
+                          <BlogManagement />
                         </ProtectedRoute>
                       } 
                     />
