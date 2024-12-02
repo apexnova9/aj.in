@@ -114,22 +114,23 @@ const timelineEvents = [
 
 export function Timeline() {
   return (
-    <div className="py-4">
+    <div>
       <h2 className="text-2xl font-bold mb-8 text-gray-900 dark:text-gray-100">
         Professional Experience
       </h2>
       <div className="relative">
-        <div className="absolute left-0 top-0 h-full w-0.5 bg-blue-500/20 dark:bg-blue-400/20"></div>
+        <div className="absolute left-0 top-0 h-full w-0.5 bg-blue-500/20 dark:bg-[#034694]/30"></div>
         <div className="space-y-12">
           {timelineEvents.map((event) => (
             <div key={event.year + event.company} className="relative pl-8">
               <div className="absolute left-0 top-0 -translate-x-1/2 w-4 h-4 rounded-full 
-                border-4 border-blue-500 dark:border-blue-400 bg-white dark:bg-gray-900">
+                border-4 border-blue-500 dark:border-[#034694] bg-white dark:bg-[#022A5E]">
               </div>
               <div>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
                   <span className="inline-block px-3 py-1 bg-blue-50 dark:bg-blue-500/10 
-                    text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-2 sm:mb-0">
+                    text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-2 sm:mb-0
+                    border border-transparent dark:border-[#034694]/30">
                     {event.duration}
                   </span>
                 </div>
@@ -137,7 +138,7 @@ export function Timeline() {
                   {event.company}
                 </h3>
                 {event.location && (
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-1">
                     {event.location}
                   </p>
                 )}
