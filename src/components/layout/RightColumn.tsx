@@ -39,7 +39,7 @@ export function RightColumn({ activeSection, onSectionChange }: RightColumnProps
         border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm">
         <NavigationCard activeSection={activeSection} onSectionChange={onSectionChange} />
       </div>
-      <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl shadow-sm pt-8 px-8 pb-12
+      <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl shadow-sm pt-12 px-8 pb-12
         border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm">
         {renderContent()}
       </div>
