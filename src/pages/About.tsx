@@ -5,37 +5,37 @@ import { Code2, Database, Brain, Layers, Building2, Search, GitGraph } from 'luc
 export default function About() {
   const skills = [
     {
-      icon: <Code2 className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
+      icon: <Code2 className="w-8 h-8 text-white" aria-hidden="true" />,
       title: "Core Technologies",
       description: "Expert in Java Core & Enterprise Stack with 14+ years of hands-on experience building scalable applications."
     },
     {
-      icon: <GitGraph className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
+      icon: <GitGraph className="w-8 h-8 text-white" aria-hidden="true" />,
       title: "DSA & Problem Solving",
       description: "Strong foundation in Data Structures, Algorithms, and System Design with expertise in optimizing complex solutions."
     },
     {
-      icon: <Database className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
+      icon: <Database className="w-8 h-8 text-white" aria-hidden="true" />,
       title: "Big Data & Analytics",
       description: "Specialized in Big Data technologies including Apache Spark, Hadoop, and distributed data processing at scale."
     },
     {
-      icon: <Search className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
+      icon: <Search className="w-8 h-8 text-white" aria-hidden="true" />,
       title: "Search & Discovery",
       description: "Expert in Elasticsearch, Lucene, and implementing advanced search solutions with high performance and relevancy."
     },
     {
-      icon: <Brain className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
+      icon: <Brain className="w-8 h-8 text-white" aria-hidden="true" />,
       title: "AI & Machine Learning",
       description: "Implementing cutting-edge AI and ML solutions to solve complex business problems and drive innovation."
     },
     {
-      icon: <Layers className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
+      icon: <Layers className="w-8 h-8 text-white" aria-hidden="true" />,
       title: "Cloud Architecture",
       description: "Extensive experience with AWS services, cloud architecture, and implementing scalable cloud-native solutions."
     },
     {
-      icon: <Building2 className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
+      icon: <Building2 className="w-8 h-8 text-white" aria-hidden="true" />,
       title: "Domain Expertise",
       description: "Deep understanding of Finance, Anti Money Laundering, HR/Recruitment, Retail and E-commerce domains, delivering mission-critical solutions."
     }
@@ -52,21 +52,22 @@ export default function About() {
         <meta property="og:type" content="profile" />
         <link rel="canonical" href="https://amitjha.in/about" />
       </Helmet>
-      <div className="min-h-screen pt-[21px] bg-slate-50 dark:bg-slate-800/50">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid gap-8 md:grid-cols-[300px_1fr]">
-            <div className="space-y-6">
-              <div className="sticky top-24">
-                <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6">
+      <div className="min-h-screen bg-white dark:bg-[#022A5E]/5">
+        <div className="container mx-auto px-6 py-24">
+          <div className="grid gap-12 md:grid-cols-[320px_1fr]">
+            <div className="space-y-8">
+              <div className="sticky top-28">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
                   Distinguished Engineer
                 </h1>
-                <p className="text-lg text-slate-600 dark:text-slate-300 mb-8">
+                <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
                   Transforming complex challenges into elegant solutions with 14+ years of expertise
                 </p>
-                <div className="space-y-4">
-                  <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Core Expertise</h3>
-                    <ul className="space-y-2 text-slate-600 dark:text-slate-300">
+                <div className="space-y-6">
+                  <div className="p-6 bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm
+                    hover:shadow-lg transition-all duration-300">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Core Expertise</h3>
+                    <ul className="space-y-3 text-gray-600 dark:text-gray-300">
                       <li>• Java Enterprise Stack</li>
                       <li>• Big Data Processing</li>
                       <li>• AI/ML Solutions</li>
@@ -74,9 +75,10 @@ export default function About() {
                       <li>• Python Development</li>
                     </ul>
                   </div>
-                  <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Domains</h3>
-                    <ul className="space-y-2 text-slate-600 dark:text-slate-300">
+                  <div className="p-6 bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm
+                    hover:shadow-lg transition-all duration-300">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Domains</h3>
+                    <ul className="space-y-3 text-gray-600 dark:text-gray-300">
                       <li>• Finance</li>
                       <li>• E-commerce</li>
                       <li>• Enterprise Solutions</li>
@@ -87,11 +89,11 @@ export default function About() {
             </div>
 
             <div className="prose dark:prose-invert max-w-none">
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">
+              <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
                 Technology Leader & Solution Architect
               </h2>
               
-              <div className="space-y-6 text-slate-600 dark:text-slate-300">
+              <div className="space-y-8 text-gray-600 dark:text-gray-300">
                 <p className="text-lg leading-relaxed">
                   An accomplished technology leader and Solution Architect with over 14+ years of experience in driving enterprise-level 
                   technical solutions. Specializing in architecting complex, mission-critical systems across Banking & Finance, 
@@ -99,98 +101,104 @@ export default function About() {
                   and Big Data platforms.
                 </p>
 
-                <div className="my-8">
-                  <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
+                <div className="my-12">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
                     Key Areas of Excellence
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                      <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100 flex items-center">
-                        <span className="w-2 h-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                         AI & Cloud Innovation
                       </h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 ml-4">
                         Led AI integration using AWS Bedrock, implementing cutting-edge solutions in AML and fraud detection systems.
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100 flex items-center">
-                        <span className="w-2 h-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                         Technical Architecture
                       </h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 ml-4">
                         Expertise in microservices, cloud-native architectures, and enterprise-scale distributed systems.
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100 flex items-center">
-                        <span className="w-2 h-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                         Search & Big Data
                       </h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 ml-4">
                         Advanced implementation of ElasticSearch, Hadoop, and Apache Spark for high-scale data processing.
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100 flex items-center">
-                        <span className="w-2 h-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                         Security & Compliance
                       </h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 ml-4">
                         Implementation of robust security frameworks and compliance standards in regulated industries.
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div>
-                  <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
+                <div className="my-12">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
                     Professional Impact
                   </h3>
-                  <ul className="space-y-3">
+                  <ul className="space-y-4">
                     <li className="flex items-start">
-                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                       Spearheaded AWS Cloud Infrastructure Design and microservices adoption, ensuring high availability and operational efficiency.
                     </li>
                     <li className="flex items-start">
-                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                       Led multiple end-to-end product development initiatives in eCommerce, banking, and healthcare sectors.
                     </li>
                     <li className="flex items-start">
-                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                       Developed real-time transaction monitoring systems for AML and fraud detection using AI and machine learning.
                     </li>
                     <li className="flex items-start">
-                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                       Drove Agile transformation and fostered a culture of continuous learning and innovation.
                     </li>
                   </ul>
                 </div>
 
-                <p className="text-lg leading-relaxed mb-12">
+                <p className="text-lg leading-relaxed">
                   Committed to driving technical excellence and innovation, with a focus on integrating AI solutions into 
                   real-world applications. Proven track record in leading teams to create impactful, scalable products that 
                   solve complex business challenges while ensuring sustained growth and operational success.
                 </p>
 
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">
+                <h3 className="text-2xl font-bold mb-8 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
                   Technical Expertise
                 </h3>
                 
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {skills.map((skill, index) => (
                     <div 
                       key={index}
-                      className="p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800
-                        hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                      className="group bg-white dark:bg-[#022A5E]/90 rounded-xl p-6 
+                        transition-all duration-300 hover:shadow-lg border border-slate-200/50 dark:border-[#034694]/30 
+                        backdrop-blur-sm"
                     >
-                      <div className="w-12 h-12 bg-gradient-to-br from-slate-700 to-slate-600 dark:from-slate-600 dark:to-slate-500 rounded-lg flex items-center justify-center shadow-md mb-4">
-                        {React.cloneElement(skill.icon, { className: "w-6 h-6 text-white" })}
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 
+                          dark:from-blue-400 dark:to-blue-500 rounded-lg flex items-center justify-center 
+                          shadow-md"
+                        >
+                          {skill.icon}
+                        </div>
+                        <h3 className="text-lg font-semibold ml-3 text-gray-900 dark:text-gray-100">
+                          {skill.title}
+                        </h3>
                       </div>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                        {skill.title}
-                      </h3>
-                      <p className="text-slate-600 dark:text-slate-300">
+                      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                         {skill.description}
                       </p>
                     </div>

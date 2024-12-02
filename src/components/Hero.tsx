@@ -13,7 +13,7 @@ export function Hero() {
               </h1>
               <p className="text-xl text-slate-300">
                 Transforming business challenges into elegant technical solutions with
-                16 years of expertise in enterprise architecture and AI innovation.
+                14+ years of expertise in enterprise architecture and AI innovation.
               </p>
             </div>
             
