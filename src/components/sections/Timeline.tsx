@@ -115,27 +115,40 @@ const timelineEvents = [
 export function Timeline() {
   return (
     <div className="py-4">
-      <h2 className="text-2xl font-bold mb-8 dark:text-white">Professional Experience</h2>
+      <h2 className="text-2xl font-bold mb-8 text-gray-900 dark:text-gray-100">
+        Professional Experience
+      </h2>
       <div className="relative">
-        <div className="absolute left-0 top-0 h-full w-0.5 bg-[#034694] dark:bg-[#022A5E] opacity-20"></div>
+        <div className="absolute left-0 top-0 h-full w-0.5 bg-blue-500/20 dark:bg-blue-400/20"></div>
         <div className="space-y-12">
           {timelineEvents.map((event) => (
             <div key={event.year + event.company} className="relative pl-8">
-              <div className="absolute left-0 top-0 -translate-x-1/2 w-4 h-4 rounded-full border-4 border-[#034694] dark:border-[#022A5E] bg-white dark:bg-slate-900"></div>
+              <div className="absolute left-0 top-0 -translate-x-1/2 w-4 h-4 rounded-full 
+                border-4 border-blue-500 dark:border-blue-400 bg-white dark:bg-gray-900">
+              </div>
               <div>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                  <span className="inline-block px-3 py-1 bg-[#034694] bg-opacity-10 dark:bg-[#022A5E] dark:bg-opacity-20 text-[#034694] dark:text-[#022A5E] rounded-full text-sm font-medium">
+                  <span className="inline-block px-3 py-1 bg-blue-50 dark:bg-blue-500/10 
+                    text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-2 sm:mb-0">
                     {event.duration}
                   </span>
                 </div>
-                <h3 className="text-xl font-semibold mb-1 dark:text-white">{event.company}</h3>
+                <h3 className="text-xl font-semibold mb-1 text-gray-900 dark:text-gray-100">
+                  {event.company}
+                </h3>
                 {event.location && (
-                  <p className="text-slate-600 dark:text-slate-400 text-sm mb-1">{event.location}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">
+                    {event.location}
+                  </p>
                 )}
-                <p className="text-[#034694] dark:text-[#022A5E] mb-2 font-medium">{event.role}</p>
-                <ul className="list-disc list-inside text-slate-600 dark:text-slate-300 space-y-1">
+                <p className="text-blue-700 dark:text-blue-300 mb-2 font-medium">
+                  {event.role}
+                </p>
+                <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1">
                   {event.achievements.map((achievement, index) => (
-                    <li key={index} className="text-sm">{achievement}</li>
+                    <li key={index} className="text-sm">
+                      {achievement}
+                    </li>
                   ))}
                 </ul>
               </div>

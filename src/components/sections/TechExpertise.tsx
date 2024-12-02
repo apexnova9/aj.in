@@ -55,43 +55,46 @@ const expertiseAreas = [
 export default function TechExpertise() {
   return (
     <section className="py-8">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-[#022A5E] dark:text-blue-100">
-          Technical Expertise
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {expertiseAreas.map((area) => (
-            <div
-              key={area.title}
-              className="group p-6 bg-white/50 dark:bg-[#022A5E]/5 rounded-xl shadow-md hover:shadow-lg 
-                transition-all duration-300 hover:scale-[1.02] border border-slate-100 dark:border-[#034694]/10 
-                hover:border-[#022A5E]/20 dark:hover:border-[#034694]/20 backdrop-blur-sm"
-            >
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#022A5E] to-[#034694] rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                  <area.icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold ml-3 text-slate-800 dark:text-blue-50">
-                  {area.title}
-                </h3>
+      <h2 className="text-2xl font-bold mb-8 text-gray-900 dark:text-gray-100">Technical Expertise</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {expertiseAreas.map((area) => (
+          <div
+            key={area.title}
+            className="group bg-white dark:bg-[#022A5E]/5 rounded-xl p-6 
+              transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-[#034694]/20
+              hover:border-blue-200 dark:hover:border-[#034694]/30 backdrop-blur-sm"
+          >
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500/90 to-blue-600/90 
+                dark:from-blue-400/90 dark:to-blue-500/90 rounded-lg flex items-center justify-center 
+                shadow-md group-hover:shadow-lg transition-all duration-300 
+                group-hover:from-blue-500 group-hover:to-blue-600 
+                dark:group-hover:from-blue-400 dark:group-hover:to-blue-500"
+              >
+                <area.icon className="w-5 h-5 text-white/90 group-hover:text-white transition-colors duration-300" />
               </div>
-              <p className="text-slate-600 dark:text-slate-300 mb-4">
-                {area.description}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {area.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-3 py-1 text-sm bg-[#022A5E]/5 dark:bg-[#034694]/10 text-[#022A5E] dark:text-blue-100 
-                      rounded-full hover:bg-[#022A5E]/10 dark:hover:bg-[#034694]/20 transition-colors duration-300"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+              <h3 className="text-lg font-semibold ml-3 text-gray-900 dark:text-gray-100">
+                {area.title}
+              </h3>
             </div>
-          ))}
-        </div>
+            <p className="text-gray-700 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+              {area.description}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {area.skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="px-2.5 py-1 text-xs font-medium bg-blue-50 dark:bg-blue-500/10 
+                    text-blue-700 dark:text-blue-300 rounded-full border border-transparent
+                    dark:border-blue-500/20 hover:bg-blue-100 dark:hover:bg-blue-500/20 
+                    transition-colors duration-200"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

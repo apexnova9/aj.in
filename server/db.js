@@ -1,16 +1,22 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const db = new sqlite3.Database(path.join(__dirname, 'blog.db'), (err) => {
+const dbPath = path.join(__dirname, 'blog.db');
+console.log('Database path:', dbPath);
+
+const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database:', err);
+    process.exit(1); // Exit if we can't connect to the database
   } else {
-    console.log('Connected to SQLite database');
+    console.log('Connected to SQLite database at:', dbPath);
   }
 });
 
 // Create tables if they don't exist
 db.serialize(() => {
+  console.log('Initializing database tables...');
+  
   db.run(`
     CREATE TABLE IF NOT EXISTS posts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,14 +29,26 @@ db.serialize(() => {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
-  `);
+  `, [], (err) => {
+    if (err) {
+      console.error('Error creating posts table:', err);
+    } else {
+      console.log('Posts table ready');
+    }
+  });
 
   db.run(`
     CREATE TABLE IF NOT EXISTS tags (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT UNIQUE NOT NULL
     )
-  `);
+  `, [], (err) => {
+    if (err) {
+      console.error('Error creating tags table:', err);
+    } else {
+      console.log('Tags table ready');
+    }
+  });
 
   db.run(`
     CREATE TABLE IF NOT EXISTS post_tags (
@@ -40,37 +58,76 @@ db.serialize(() => {
       FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
       FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
     )
-  `);
+  `, [], (err) => {
+    if (err) {
+      console.error('Error creating post_tags table:', err);
+    } else {
+      console.log('Post_tags table ready');
+    }
+  });
 });
 
 // Wrap database methods in promises for easier use
 const dbAsync = {
   all: (sql, params = []) => {
     return new Promise((resolve, reject) => {
+      console.log('Executing query:', sql, 'with params:', params);
       db.all(sql, params, (err, rows) => {
-        if (err) reject(err);
-        else resolve(rows);
+        if (err) {
+          console.error('Database error in all():', err);
+          reject(err);
+        } else {
+          console.log(`Query returned ${rows?.length || 0} rows`);
+          resolve(rows);
+        }
       });
     });
   },
 
   get: (sql, params = []) => {
     return new Promise((resolve, reject) => {
+      console.log('Executing query:', sql, 'with params:', params);
       db.get(sql, params, (err, row) => {
-        if (err) reject(err);
-        else resolve(row);
+        if (err) {
+          console.error('Database error in get():', err);
+          reject(err);
+        } else {
+          console.log('Query returned row:', row ? 'yes' : 'no');
+          resolve(row);
+        }
       });
     });
   },
 
   run: (sql, params = []) => {
     return new Promise((resolve, reject) => {
+      console.log('Executing query:', sql, 'with params:', params);
       db.run(sql, params, function(err) {
-        if (err) reject(err);
-        else resolve({ lastID: this.lastID, changes: this.changes });
+        if (err) {
+          console.error('Database error in run():', err);
+          reject(err);
+        } else {
+          console.log('Query affected rows:', this.changes);
+          resolve(this);
+        }
       });
     });
   }
 };
+
+// Handle database errors
+db.on('error', (err) => {
+  console.error('Database error event:', err);
+});
+
+process.on('exit', () => {
+  db.close((err) => {
+    if (err) {
+      console.error('Error closing database:', err);
+    } else {
+      console.log('Database connection closed.');
+    }
+  });
+});
 
 module.exports = dbAsync;

@@ -5,37 +5,37 @@ import { Code2, Database, Brain, Layers, Building2, Search, GitGraph } from 'luc
 export default function About() {
   const skills = [
     {
-      icon: <Code2 className="w-8 h-8 text-blue-500" aria-hidden="true" />,
+      icon: <Code2 className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
       title: "Core Technologies",
       description: "Expert in Java Core & Enterprise Stack with 14+ years of hands-on experience building scalable applications."
     },
     {
-      icon: <GitGraph className="w-8 h-8 text-rose-500" aria-hidden="true" />,
+      icon: <GitGraph className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
       title: "DSA & Problem Solving",
       description: "Strong foundation in Data Structures, Algorithms, and System Design with expertise in optimizing complex solutions."
     },
     {
-      icon: <Database className="w-8 h-8 text-green-500" aria-hidden="true" />,
+      icon: <Database className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
       title: "Big Data & Analytics",
       description: "Specialized in Big Data technologies including Apache Spark, Hadoop, and distributed data processing at scale."
     },
     {
-      icon: <Search className="w-8 h-8 text-amber-500" aria-hidden="true" />,
+      icon: <Search className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
       title: "Search & Discovery",
       description: "Expert in Elasticsearch, Lucene, and implementing advanced search solutions with high performance and relevancy."
     },
     {
-      icon: <Brain className="w-8 h-8 text-purple-500" aria-hidden="true" />,
+      icon: <Brain className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
       title: "AI & Machine Learning",
       description: "Implementing cutting-edge AI and ML solutions to solve complex business problems and drive innovation."
     },
     {
-      icon: <Layers className="w-8 h-8 text-sky-500" aria-hidden="true" />,
+      icon: <Layers className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
       title: "Cloud Architecture",
       description: "Extensive experience with AWS services, cloud architecture, and implementing scalable cloud-native solutions."
     },
     {
-      icon: <Building2 className="w-8 h-8 text-orange-500" aria-hidden="true" />,
+      icon: <Building2 className="w-8 h-8 text-slate-700 dark:text-slate-400" aria-hidden="true" />,
       title: "Domain Expertise",
       description: "Deep understanding of Finance, Anti Money Laundering, HR/Recruitment, Retail and E-commerce domains, delivering mission-critical solutions."
     }
@@ -52,46 +52,42 @@ export default function About() {
         <meta property="og:type" content="profile" />
         <link rel="canonical" href="https://amitjha.in/about" />
       </Helmet>
-      <div 
-        className="container mx-auto px-4 py-28 lg:py-32 flex-grow"
-        role="main"
-        aria-label="About page content"
-      >
-        <div className="lg:grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-4 mb-8 lg:mb-0">
-            <div className="sticky top-24">
-              <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">
-                Distinguished Engineer
-              </h1>
-              <p className="text-lg text-slate-600 dark:text-slate-300 mb-8">
-                Transforming complex challenges into elegant solutions with 14+ years of expertise
-              </p>
-              <div className="space-y-4">
-                <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Core Expertise</h3>
-                  <ul className="space-y-2 text-slate-600 dark:text-slate-300">
-                    <li>• Java Enterprise Stack</li>
-                    <li>• Big Data Processing</li>
-                    <li>• AI/ML Solutions</li>
-                    <li>• Cloud Architecture</li>
-                    <li>• Python Development</li>
-                  </ul>
-                </div>
-                <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Domains</h3>
-                  <ul className="space-y-2 text-slate-600 dark:text-slate-300">
-                    <li>• Finance</li>
-                    <li>• E-commerce</li>
-                    <li>• Enterprise Solutions</li>
-                  </ul>
+      <div className="min-h-screen pt-[21px] bg-slate-50 dark:bg-slate-800/50">
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid gap-8 md:grid-cols-[300px_1fr]">
+            <div className="space-y-6">
+              <div className="sticky top-24">
+                <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6">
+                  Distinguished Engineer
+                </h1>
+                <p className="text-lg text-slate-600 dark:text-slate-300 mb-8">
+                  Transforming complex challenges into elegant solutions with 14+ years of expertise
+                </p>
+                <div className="space-y-4">
+                  <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Core Expertise</h3>
+                    <ul className="space-y-2 text-slate-600 dark:text-slate-300">
+                      <li>• Java Enterprise Stack</li>
+                      <li>• Big Data Processing</li>
+                      <li>• AI/ML Solutions</li>
+                      <li>• Cloud Architecture</li>
+                      <li>• Python Development</li>
+                    </ul>
+                  </div>
+                  <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Domains</h3>
+                    <ul className="space-y-2 text-slate-600 dark:text-slate-300">
+                      <li>• Finance</li>
+                      <li>• E-commerce</li>
+                      <li>• Enterprise Solutions</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="lg:col-span-8">
             <div className="prose dark:prose-invert max-w-none">
-              <h2 className="text-3xl font-bold text-[#022A5E] dark:text-blue-200 mb-6">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">
                 Technology Leader & Solution Architect
               </h2>
               
@@ -104,13 +100,13 @@ export default function About() {
                 </p>
 
                 <div className="my-8">
-                  <h3 className="text-xl font-semibold text-[#022A5E] dark:text-blue-200 mb-4">
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
                     Key Areas of Excellence
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                     <div>
-                      <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200 flex items-center">
-                        <span className="w-2 h-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                      <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
                         AI & Cloud Innovation
                       </h4>
                       <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
@@ -118,8 +114,8 @@ export default function About() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200 flex items-center">
-                        <span className="w-2 h-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                      <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
                         Technical Architecture
                       </h4>
                       <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
@@ -127,8 +123,8 @@ export default function About() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200 flex items-center">
-                        <span className="w-2 h-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                      <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
                         Search & Big Data
                       </h4>
                       <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
@@ -136,8 +132,8 @@ export default function About() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200 flex items-center">
-                        <span className="w-2 h-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
+                      <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100 flex items-center">
+                        <span className="w-2 h-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
                         Security & Compliance
                       </h4>
                       <p className="text-sm text-slate-600 dark:text-slate-300 ml-4">
@@ -148,25 +144,25 @@ export default function About() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-[#022A5E] dark:text-blue-200 mb-4">
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
                     Professional Impact
                   </h3>
                   <ul className="space-y-3">
                     <li className="flex items-start">
-                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
-                      <span>Spearheaded AWS Cloud Infrastructure Design and microservices adoption, ensuring high availability and operational efficiency.</span>
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      Spearheaded AWS Cloud Infrastructure Design and microservices adoption, ensuring high availability and operational efficiency.
                     </li>
                     <li className="flex items-start">
-                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
-                      <span>Led multiple end-to-end product development initiatives in eCommerce, banking, and healthcare sectors.</span>
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      Led multiple end-to-end product development initiatives in eCommerce, banking, and healthcare sectors.
                     </li>
                     <li className="flex items-start">
-                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
-                      <span>Developed real-time transaction monitoring systems for AML and fraud detection using AI and machine learning.</span>
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      Developed real-time transaction monitoring systems for AML and fraud detection using AI and machine learning.
                     </li>
                     <li className="flex items-start">
-                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-[#022A5E] dark:bg-blue-400"></span>
-                      <span>Drove Agile transformation and fostered a culture of continuous learning and innovation.</span>
+                      <span className="w-2 h-2 mt-2 mr-2 rounded-full bg-slate-700 dark:bg-slate-400"></span>
+                      Drove Agile transformation and fostered a culture of continuous learning and innovation.
                     </li>
                   </ul>
                 </div>
@@ -177,7 +173,7 @@ export default function About() {
                   solve complex business challenges while ensuring sustained growth and operational success.
                 </p>
 
-                <h3 className="text-2xl font-bold text-[#022A5E] dark:text-blue-200 mb-6">
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">
                   Technical Expertise
                 </h3>
                 
@@ -188,10 +184,10 @@ export default function About() {
                       className="p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800
                         hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
                     >
-                      <div className="w-12 h-12 bg-gradient-to-br from-[#022A5E] to-[#034694] rounded-lg flex items-center justify-center shadow-md mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-slate-700 to-slate-600 dark:from-slate-600 dark:to-slate-500 rounded-lg flex items-center justify-center shadow-md mb-4">
                         {React.cloneElement(skill.icon, { className: "w-6 h-6 text-white" })}
                       </div>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
                         {skill.title}
                       </h3>
                       <p className="text-slate-600 dark:text-slate-300">
