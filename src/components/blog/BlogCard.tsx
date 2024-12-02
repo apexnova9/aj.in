@@ -19,8 +19,8 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
 
   return (
     <article className={`
-      group bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-lg 
-      transition-all duration-300 overflow-hidden
+      group bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 
+      backdrop-blur-sm transition-all duration-300 hover:shadow-lg
       ${featured ? 'lg:grid lg:grid-cols-2 lg:gap-8' : 'flex flex-col h-full'}
     `}>
       {post.featured_image && (
@@ -50,7 +50,8 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
             {post.tags.map(tag => (
               <span
                 key={tag}
-                className="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full"
+                className="px-3 py-1 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 
+                  rounded-full text-sm font-medium border border-transparent dark:border-blue-500/20"
               >
                 {tag}
               </span>
@@ -59,49 +60,41 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
         )}
 
         {/* Title */}
-        <h2 className={`
-          font-semibold text-slate-900 dark:text-white mb-3 
-          group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors
-          ${featured ? 'text-3xl lg:text-4xl' : 'text-xl line-clamp-2'}
-        `}>
-          <Link to={`/blog/${post.slug}`} className="hover:underline">
-            {post.title}
-          </Link>
-        </h2>
+        <Link
+          to={`/blog/${post.slug}`}
+          className="text-xl font-bold text-gray-900 dark:text-gray-100 
+            group-hover:text-blue-600 dark:group-hover:text-blue-400 
+            transition-colors duration-300 mb-3"
+        >
+          {post.title}
+        </Link>
 
         {/* Meta Info */}
-        <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400 mb-4">
-          <div className="flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
-            <time dateTime={post.created_at}>{formattedDate}</time>
+        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <div className="flex items-center">
+            <Calendar className="w-4 h-4 mr-2" />
+            {formattedDate}
           </div>
-          <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
-            <span>{estimatedReadTime} min read</span>
+          <div className="flex items-center">
+            <Clock className="w-4 h-4 mr-2" />
+            {estimatedReadTime} min read
           </div>
         </div>
 
         {/* Excerpt */}
-        <p className={`
-          text-slate-600 dark:text-slate-400 mb-6
-          ${featured ? 'text-lg' : 'line-clamp-3'}
-        `}>
+        <p className="text-gray-600 dark:text-gray-300 mb-6 line-clamp-3">
           {post.excerpt}
         </p>
 
         {/* Read More Link */}
-        <div className={featured ? 'mt-auto' : ''}>
+        <div className="mt-auto">
           <Link
             to={`/blog/${post.slug}`}
-            className={`
-              inline-flex items-center gap-1 font-medium transition-all group-hover:gap-2
-              ${featured 
-                ? 'text-lg text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
-                : 'text-blue-600 dark:text-blue-400'
-              }
-            `}
+            className="inline-flex items-center text-blue-600 dark:text-blue-400 
+              hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
           >
-            Read More <ArrowRight className={`h-4 w-4 ${featured ? 'h-5 w-5' : ''}`} />
+            Read More
+            <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </div>
       </div>

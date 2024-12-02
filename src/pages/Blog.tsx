@@ -56,120 +56,98 @@ export default function Blog() {
     </div>
   );
 
-  // Split posts into featured (first post) and regular posts
-  const [featuredPost, ...regularPosts] = filteredPosts;
-
   return (
     <>
       <Helmet>
-        <title>Blog - Amit Jha's Technical Insights & Articles</title>
-        <meta name="description" content="Read Amit Jha's insights on Java, Big Data, AI/ML, and Cloud Architecture. Technical articles and professional experiences shared." />
-        <meta name="keywords" content="Amit Jha Blog, Technical Articles, Java, Big Data, Cloud Architecture, Engineering Blog" />
-        <meta property="og:title" content="Amit Jha's Technical Blog" />
-        <meta property="og:description" content="Technical insights and articles on Java, Big Data, and Cloud Architecture." />
-        <meta property="og:type" content="blog" />
+        <title>Blog | Amit Jha</title>
+        <meta name="description" content="Insights on enterprise architecture, AI innovation, and cloud solutions." />
         <link rel="canonical" href="https://amitjha.in/blog" />
       </Helmet>
-      
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-        <div className="container mx-auto px-4 py-28 lg:py-32" role="main" aria-label="Blog content">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4" tabIndex={0}>
-                Technical Blog
-              </h1>
-              <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                Insights and articles about Java, Big Data, Cloud Architecture, and more.
-              </p>
-            </div>
 
-            {/* Search and Filter Section */}
-            <div className="mb-12">
-              <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-                <div className="relative w-full md:w-96">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
-                  <input
-                    type="text"
-                    placeholder="Search articles..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                {allTags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 items-center">
-                    <Tag className="h-5 w-5 text-slate-400" />
-                    <div className="flex flex-wrap gap-2">
-                      {allTags.map(tag => (
-                        <button
-                          key={tag}
-                          onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                          className={`px-3 py-1 rounded-full text-sm font-medium transition-colors
-                            ${selectedTag === tag
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900'
-                            }`}
-                        >
-                          {tag}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {loading ? (
-              <LoadingSpinner />
-            ) : error ? (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center" role="alert">
-                <div className="text-red-600 dark:text-red-400 text-lg font-medium mb-2">
-                  {error}
-                </div>
-                <div className="text-slate-600 dark:text-slate-400 text-sm">
-                  Please make sure the backend server is running on port 3002
-                </div>
-              </div>
-            ) : filteredPosts.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="text-6xl mb-4">📝</div>
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-                  {posts.length === 0 ? "No blog posts available yet" : "No matching posts found"}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400">
-                  {posts.length === 0 
-                    ? "Check back soon for new content!"
-                    : "Try adjusting your search or filter criteria"}
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-16">
-                {/* Featured Post */}
-                {featuredPost && (
-                  <div className="mb-16">
-                    <BlogCard post={featuredPost} featured={true} />
-                  </div>
-                )}
-
-                {/* Regular Posts Grid */}
-                {regularPosts.length > 0 && (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-12">
-                    {regularPosts.map((post) => (
-                      <BlogCard key={post.id} post={post} />
-                    ))}
-                  </div>
-                )}
-
-                {filteredPosts.length < posts.length && (
-                  <div className="text-center mt-8 text-slate-600 dark:text-slate-400">
-                    Showing {filteredPosts.length} of {posts.length} posts
-                  </div>
-                )}
-              </div>
-            )}
+      {/* Hero Banner */}
+      <div className="relative bg-gradient-to-br from-[#022A5E] to-[#034694] overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 backdrop-blur-3xl"></div>
+        </div>
+        <div className="relative container mx-auto px-6 py-24">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Insights & Perspectives
+            </h1>
+            <p className="text-xl text-blue-100 leading-relaxed">
+              Exploring enterprise architecture, AI innovation, and cloud solutions. 
+              Join me in discussing the latest trends and best practices in technology leadership.
+            </p>
           </div>
         </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-6 py-12">
+        {/* Search and Filter Section */}
+        <div className="mb-12 space-y-6">
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Search Bar */}
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search articles..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-white dark:bg-[#022A5E]/90 border border-slate-200/50 
+                  dark:border-[#034694]/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 
+                  dark:focus:ring-blue-400 text-gray-900 dark:text-gray-100 placeholder-gray-400 
+                  dark:placeholder-gray-500 backdrop-blur-sm"
+              />
+            </div>
+          </div>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setSelectedTag(null)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all
+                ${!selectedTag 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-transparent dark:border-blue-500/20'
+                }`}
+            >
+              All
+            </button>
+            {allTags.map(tag => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(tag)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all
+                  ${selectedTag === tag
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-transparent dark:border-blue-500/20'
+                  }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Blog Posts Grid */}
+        {loading ? (
+          <LoadingSpinner />
+        ) : error ? (
+          <div className="text-center text-red-500 dark:text-red-400">{error}</div>
+        ) : filteredPosts.length === 0 ? (
+          <div className="text-center text-gray-500 dark:text-gray-400">
+            No blog posts found matching your criteria.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPosts.map((post) => (
+              <BlogCard key={post._id} post={post} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
