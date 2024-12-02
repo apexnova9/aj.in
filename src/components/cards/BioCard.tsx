@@ -2,7 +2,7 @@ import React from 'react';
 
 export function BioCard() {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6">
+    <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl shadow-sm p-6 border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm">
       <div className="space-y-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           Amit Jha
