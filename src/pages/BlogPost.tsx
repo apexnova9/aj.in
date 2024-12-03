@@ -384,23 +384,27 @@ export default function BlogPost() {
                       >
                         <div className="aspect-video mb-4 overflow-hidden rounded-xl relative">
                           {relatedPost.featured_image ? (
-                            <img
-                              src={relatedPost.featured_image}
-                              alt={relatedPost.title}
-                              className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-300"
-                            />
+                            <>
+                              <img
+                                src={relatedPost.featured_image}
+                                alt={relatedPost.title}
+                                className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            </>
                           ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 flex flex-col items-center justify-center group-hover:from-blue-50 group-hover:to-slate-100 dark:group-hover:from-blue-900/20 dark:group-hover:to-slate-900 transition-colors duration-300">
-                              <div className="w-12 h-12 mb-2 text-slate-300 dark:text-slate-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                </svg>
+                            <>
+                              <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 flex flex-col items-center justify-center group-hover:from-blue-50 group-hover:to-slate-100 dark:group-hover:from-blue-900/20 dark:group-hover:to-slate-900 transition-colors duration-300">
+                                <div className="w-12 h-12 mb-2 text-slate-300 dark:text-slate-600">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                  </svg>
+                                </div>
+                                <span className="text-sm">No cover image</span>
                               </div>
-                              <span className="text-sm text-slate-400 dark:text-slate-500 font-medium">No cover image</span>
-                            </div>
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            </>
                           )}
-                          {/* Overlay gradient */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </div>
                         
                         <div className="space-y-2">
@@ -438,7 +442,7 @@ export default function BlogPost() {
             {/* Sidebar Column */}
             <aside className="lg:col-span-4 space-y-8">
               {/* Author Card */}
-              <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm">
+              <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm transition-all duration-300 p-6 shadow-sm">
                 <div className="flex items-center gap-4 mb-4">
                   <img
                     src="/amit.jpg"
@@ -461,10 +465,10 @@ export default function BlogPost() {
               </div>
 
               {/* Ad Space */}
-              <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-6">
+              <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm transition-all duration-300 p-6">
                 <div className="text-center text-slate-600 dark:text-slate-400">
-                  <p className="text-sm">Advertisement Space</p>
-                  <div className="mt-4 aspect-[4/3] bg-slate-200 dark:bg-slate-700 rounded flex items-center justify-center">
+                  <p className="text-sm font-medium">Advertisement Space</p>
+                  <div className="mt-4 aspect-[4/3] bg-slate-100 dark:bg-slate-800/50 rounded-lg flex items-center justify-center">
                     <span className="text-sm">Your Ad Here</span>
                   </div>
                 </div>
