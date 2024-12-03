@@ -4,6 +4,7 @@ import { BlogCard } from '../components/blog/BlogCard';
 import { BlogPost } from '../types/blog';
 import { blogService } from '../services/blogService';
 import { Search, Tag } from 'lucide-react';
+import { Breadcrumb } from '../components/common/Breadcrumb';
 
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -85,6 +86,15 @@ export default function Blog() {
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-12">
+        {/* Breadcrumb */}
+        <div className="mb-8">
+          <Breadcrumb
+            items={[
+              { label: 'Blog', path: '/blog' }
+            ]}
+          />
+        </div>
+        
         {/* Search and Filter Section */}
         <div className="mb-12 space-y-6">
           <div className="flex flex-col md:flex-row gap-6">
