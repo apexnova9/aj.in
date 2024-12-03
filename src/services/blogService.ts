@@ -80,25 +80,37 @@ export const blogService = {
 
   async updatePost(id: number, data: BlogPostInput): Promise<BlogPost> {
     try {
+      console.log('Updating post with data:', data);
       const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (key === 'featured_image' && value instanceof File) {
-          formData.append(key, value);
-        } else if (key === 'tags' && Array.isArray(value)) {
-          formData.append(key, JSON.stringify(value));
-        } else if (value !== null && value !== undefined) {
-          formData.append(key, String(value));
-        }
-      });
-
+      
+      // Add all fields to FormData
+      formData.append('title', data.title);
+      formData.append('content', data.content || '');
+      formData.append('excerpt', data.excerpt || '');
+      formData.append('status', data.status || 'draft');
+      
+      // Handle tags
+      if (Array.isArray(data.tags)) {
+        formData.append('tags', JSON.stringify(data.tags));
+      }
+      
+      // Handle featured image
+      if (data.featured_image instanceof File) {
+        formData.append('featured_image', data.featured_image);
+      }
+      
+      console.log('Sending form data:', Object.fromEntries(formData.entries()));
+      
       const response = await fetch(`${API_URL}/posts/${id}`, {
         method: 'PUT',
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update post');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update post');
       }
+      
       return response.json();
     } catch (error) {
       console.error('Error in updatePost:', error);

@@ -150,9 +150,41 @@ app.post('/api/posts', upload.single('featured_image'), async (req, res) => {
 app.put('/api/posts/:id', upload.single('featured_image'), async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, excerpt, status, tags = [] } = req.body;
+    console.log('Received request body:', req.body);
     
-    console.log('Updating post:', id);
+    // Extract fields from form data
+    const title = req.body.title;
+    const content = req.body.content;
+    const excerpt = req.body.excerpt;
+    const status = req.body.status || 'draft';
+    let tags = [];
+    
+    // Parse tags if they exist
+    if (req.body.tags) {
+      try {
+        if (typeof req.body.tags === 'string') {
+          tags = JSON.parse(req.body.tags);
+          console.log('Parsed tags from JSON:', tags);
+        } else if (Array.isArray(req.body.tags)) {
+          tags = req.body.tags;
+          console.log('Using array tags:', tags);
+        }
+      } catch (e) {
+        console.error('Error parsing tags:', e);
+        if (typeof req.body.tags === 'string') {
+          tags = req.body.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+          console.log('Parsed tags from comma-separated string:', tags);
+        }
+      }
+    }
+    
+    console.log('Processing update with:', { title, content, excerpt, status, tags });
+    
+    // Validate required fields
+    if (!title) {
+      console.error('Title is missing');
+      return res.status(400).json({ error: 'Title is required' });
+    }
     
     let updateFields = ['title = ?', 'content = ?', 'excerpt = ?', 'status = ?'];
     let params = [title, content, excerpt, status];
@@ -164,29 +196,51 @@ app.put('/api/posts/:id', upload.single('featured_image'), async (req, res) => {
     
     params.push(id);
     
+    console.log('Executing update query with params:', params);
+    
     const result = await db.run(
       `UPDATE posts SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
       params
     );
     
     // Update tags
+    console.log('Deleting existing tags for post:', id);
     await db.run('DELETE FROM post_tags WHERE post_id = ?', [id]);
     
     for (const tagName of tags) {
+      // Skip empty tags
+      if (!tagName.trim()) {
+        console.log('Skipping empty tag');
+        continue;
+      }
+      
+      console.log('Processing tag:', tagName);
       let tag = await db.get('SELECT id FROM tags WHERE name = ?', [tagName]);
       if (!tag) {
+        console.log('Creating new tag:', tagName);
         const tagResult = await db.run('INSERT INTO tags (name) VALUES (?)', [tagName]);
         tag = { id: tagResult.lastID };
       }
       
+      console.log('Adding tag to post:', tagName, tag.id);
       await db.run(
         'INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)',
         [id, tag.id]
       );
     }
     
-    console.log('Post updated successfully');
-    res.json({ success: true, changes: result.changes });
+    // Get the updated post with tags
+    const updatedPost = await db.get(`
+      SELECT p.*, GROUP_CONCAT(t.name) as tags
+      FROM posts p
+      LEFT JOIN post_tags pt ON p.id = pt.post_id
+      LEFT JOIN tags t ON pt.tag_id = t.id
+      WHERE p.id = ?
+      GROUP BY p.id
+    `, [id]);
+    
+    console.log('Post updated successfully:', updatedPost);
+    res.json(updatedPost);
   } catch (error) {
     console.error('Error updating post:', error);
     res.status(500).json({ error: 'Failed to update post', details: error.message });

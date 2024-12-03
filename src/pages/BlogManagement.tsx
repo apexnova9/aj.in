@@ -53,15 +53,21 @@ export function BlogManagement() {
   const handleUpdatePost = async (data: BlogPostInput) => {
     if (!selectedPost?.id) return;
     try {
-      setError(null);
       setActionInProgress(true);
-      await blogService.updatePost(Number(selectedPost.id), data);
+      setError(null);
+      
+      console.log('Updating post with ID:', selectedPost.id);
+      console.log('Update data:', data);
+      
+      const response = await blogService.updatePost(selectedPost.id, data);
+      console.log('Update response:', response);
+      
       await loadPosts();
       setSelectedPost(null);
       setIsFormVisible(false);
-    } catch (err) {
-      console.error('Error updating post:', err);
-      setError(err instanceof Error ? err.message : 'Failed to update post');
+    } catch (error) {
+      console.error('Error updating post:', error);
+      setError(error instanceof Error ? error.message : 'Failed to update post');
     } finally {
       setActionInProgress(false);
     }

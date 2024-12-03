@@ -24,29 +24,22 @@ export function Certificates() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-8 text-gray-900 dark:text-gray-100">Professional Certificates</h2>
-      <div className="grid gap-6">
+      <h2 className="text-2xl font-bold mb-8 dark:text-white">Professional Certificates</h2>
+      <div className="space-y-8">
         {certificates.map((cert) => (
           <div 
             key={cert.id} 
-            className="bg-white dark:bg-[#022A5E]/90 rounded-xl p-6 
-              border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm
-              transition-all duration-300 hover:shadow-lg"
+            className="border-l-4 border-blue-600 dark:border-blue-500 pl-6"
           >
-            <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
+            <h3 className="text-xl font-semibold dark:text-white">
               {cert.name}
             </h3>
-            <p className="text-blue-700 dark:text-blue-300 mb-1 font-medium">
-              {cert.issuer}
+            <p className="text-blue-600 dark:text-blue-400 mb-2">
+              {cert.issuer} • {cert.year}
             </p>
-            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 text-sm">
-              <span className="px-2.5 py-0.5 bg-blue-50 dark:bg-blue-500/10 
-                rounded-full border border-transparent dark:border-[#034694]/30">
-                {cert.year}
-              </span>
-              <span>•</span>
-              <span className="font-mono">ID: {cert.id}</span>
-            </div>
+            <p className="text-slate-600 dark:text-slate-300 font-mono text-sm">
+              Certificate ID: {cert.id}
+            </p>
           </div>
         ))}
       </div>

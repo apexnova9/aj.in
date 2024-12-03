@@ -66,7 +66,12 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    console.log('Form field changed:', name, value);
+    setFormData(prev => {
+      const newData = { ...prev, [name]: value };
+      console.log('Updated form data:', newData);
+      return newData;
+    });
   };
 
   const handleEditorChange = (content: string) => {
@@ -76,26 +81,51 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
   const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && tagInput.trim()) {
       e.preventDefault();
+      console.log('Adding tag:', tagInput.trim());
       if (!formData.tags.includes(tagInput.trim())) {
-        setFormData(prev => ({
-          ...prev,
-          tags: [...prev.tags, tagInput.trim()]
-        }));
+        setFormData(prev => {
+          const newTags = [...prev.tags, tagInput.trim()];
+          console.log('Updated tags:', newTags);
+          return {
+            ...prev,
+            tags: newTags
+          };
+        });
       }
       setTagInput('');
     }
   };
 
   const removeTag = (tagToRemove: string) => {
-    setFormData(prev => ({
-      ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
-    }));
+    console.log('Removing tag:', tagToRemove);
+    setFormData(prev => {
+      const newTags = prev.tags.filter(tag => tag !== tagToRemove);
+      console.log('Updated tags:', newTags);
+      return {
+        ...prev,
+        tags: newTags
+      };
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    
+    // Validate required fields
+    if (!formData.title.trim()) {
+      console.error('Title is required');
+      return;
+    }
+    
+    console.log('Submitting form data:', formData);
+    onSubmit({
+      ...formData,
+      title: formData.title.trim(),
+      content: formData.content || '',
+      excerpt: formData.excerpt || '',
+      status: formData.status || 'draft',
+      tags: formData.tags || [],
+    });
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +135,7 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
       // For now, we'll just use a placeholder
       setFormData(prev => ({
         ...prev,
-        featured_image: URL.createObjectURL(file)
+        featured_image: file
       }));
     }
   };
@@ -203,7 +233,7 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
         {formData.featured_image && (
           <div className="mt-2">
             <img
-              src={formData.featured_image}
+              src={formData.featured_image instanceof File ? URL.createObjectURL(formData.featured_image) : formData.featured_image}
               alt="Featured"
               className="max-h-40 rounded-md"
             />
