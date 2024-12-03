@@ -69,35 +69,38 @@ export function BioCard() {
         <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
           Technology Expertise
         </h3>
-        <div className="space-y-6">
+        <div className="space-y-8">
           {tagCategories.map((category) => (
             <div key={category.title} className="space-y-3">
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {category.title}
+              <h4 className="text-base font-semibold text-blue-600 dark:text-blue-300 flex items-center">
+                <span className="mr-2">{category.title}</span>
+                <div className="flex-grow h-px bg-slate-200/50 dark:bg-[#034694]/30"></div>
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 pl-2">
                 {category.tags.map((tag) => {
-                  const isDataStack = tag.includes('Data') || tag.includes('Spark') || 
-                                    tag.includes('Kafka') || tag.includes('ETL') ||
-                                    tag.includes('Pipeline');
-                  const isJavaStack = tag.includes('Java') || tag.includes('Spring') || 
-                                    tag.includes('Hibernate') || tag.includes('JPA');
+                  const isAIStack = category.title === 'AI & Innovation';
+                  const isDataStack = category.title === 'Data Engineering & Big Data' || 
+                                    category.title === 'Data Storage & Processing';
+                  const isJavaStack = category.title === 'Java & Enterprise Stack';
                   
                   let tagStyle = '';
-                  if (isDataStack) {
+                  if (isAIStack) {
+                    tagStyle = 'bg-purple-100 dark:bg-purple-800/40 text-purple-800 dark:text-purple-200 border-purple-200 dark:border-purple-700/50';
+                  } else if (isDataStack) {
                     tagStyle = 'bg-green-100 dark:bg-green-800/40 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700/50';
                   } else if (isJavaStack) {
                     tagStyle = 'bg-blue-100 dark:bg-blue-800/40 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700/50';
                   } else {
-                    tagStyle = 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-transparent dark:border-[#034694]/30';
+                    tagStyle = 'bg-slate-100 dark:bg-slate-800/40 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700/50';
                   }
                   
                   return (
                     <span
                       key={tag}
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
                         ${tagStyle}
-                        border hover:bg-opacity-80 transition-colors duration-200`}
+                        border hover:bg-opacity-90 transition-all duration-200
+                        transform hover:scale-105`}
                     >
                       #{tag}
                     </span>
