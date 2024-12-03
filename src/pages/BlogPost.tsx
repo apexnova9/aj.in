@@ -17,21 +17,23 @@ export default function BlogPost() {
     next: BlogPostType | null;
   }>({ previous: null, next: null });
   const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
+  const [allPosts, setAllPosts] = useState<BlogPostType[]>([]);
 
   useEffect(() => {
     const fetchPost = async () => {
       if (!slug) return;
       try {
         setLoading(true);
-        const [fetchedPost, allPosts] = await Promise.all([
+        const [fetchedPost, fetchedPosts] = await Promise.all([
           blogService.getPostBySlug(slug),
           blogService.getPosts()
         ]);
         
         setPost(fetchedPost);
+        setAllPosts(fetchedPosts);
 
         // Find adjacent posts
-        const publishedPosts = allPosts.filter(p => p.status === 'published');
+        const publishedPosts = fetchedPosts.filter(p => p.status === 'published');
         const currentIndex = publishedPosts.findIndex(p => p.slug === slug);
         
         setAdjacentPosts({
@@ -280,7 +282,7 @@ export default function BlogPost() {
                     className="inline-flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-lg transition-colors"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                     <span>Share on X</span>
                   </a>
@@ -293,7 +295,7 @@ export default function BlogPost() {
                     className="inline-flex items-center gap-2 px-4 py-2 bg-[#0A66C2] hover:bg-[#004182] text-white rounded-lg transition-colors"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                     </svg>
                     <span>Share on LinkedIn</span>
                   </a>
@@ -306,7 +308,7 @@ export default function BlogPost() {
                     className="inline-flex items-center gap-2 px-4 py-2 bg-[#1877F2] hover:bg-[#0C63D4] text-white rounded-lg transition-colors"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                     <span>Share on Facebook</span>
                   </a>
@@ -394,10 +396,10 @@ export default function BlogPost() {
                             </>
                           ) : (
                             <>
-                              <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 flex flex-col items-center justify-center group-hover:from-blue-50 group-hover:to-slate-100 dark:group-hover:from-blue-900/20 dark:group-hover:to-slate-900 transition-colors duration-300">
+                              <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
                                 <div className="w-12 h-12 mb-2 text-slate-300 dark:text-slate-600">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
                                   </svg>
                                 </div>
                                 <span className="text-sm">No cover image</span>
@@ -437,12 +439,41 @@ export default function BlogPost() {
                   </div>
                 </section>
               )}
+
+              {/* Advertisement Section */}
+              <section className="mt-16 pt-16 border-t border-slate-200 dark:border-slate-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {/* Ad Space 1 */}
+                  <div className="relative">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">Advertisement space</div>
+                    <div className="aspect-[4/3] bg-slate-100 dark:bg-slate-800/50 rounded-lg flex items-center justify-center">
+                      <span className="text-sm text-slate-400 dark:text-slate-500">Your ad here</span>
+                    </div>
+                  </div>
+
+                  {/* Ad Space 2 */}
+                  <div className="relative">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">Advertisement space</div>
+                    <div className="aspect-[4/3] bg-slate-100 dark:bg-slate-800/50 rounded-lg flex items-center justify-center">
+                      <span className="text-sm text-slate-400 dark:text-slate-500">Your ad here</span>
+                    </div>
+                  </div>
+
+                  {/* Ad Space 3 */}
+                  <div className="relative">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">Advertisement space</div>
+                    <div className="aspect-[4/3] bg-slate-100 dark:bg-slate-800/50 rounded-lg flex items-center justify-center">
+                      <span className="text-sm text-slate-400 dark:text-slate-500">your ad here</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
 
             {/* Sidebar Column */}
             <aside className="lg:col-span-4 space-y-8">
               {/* Author Card */}
-              <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm transition-all duration-300 p-6 shadow-sm">
+              <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm transition-all duration-300 p-6">
                 <div className="flex items-center gap-4 mb-4">
                   <img
                     src="/amit.jpg"
@@ -456,7 +487,7 @@ export default function BlogPost() {
                   />
                   <div>
                     <h3 className="font-bold text-slate-900 dark:text-white">Amit Jha</h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">Software Engineer</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">AI and ML Enthusiast</p>
                   </div>
                 </div>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -464,12 +495,61 @@ export default function BlogPost() {
                 </p>
               </div>
 
-              {/* Ad Space */}
+              {/* First Ad Space */}
               <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm transition-all duration-300 p-6">
                 <div className="text-center text-slate-600 dark:text-slate-400">
                   <p className="text-sm font-medium">Advertisement Space</p>
                   <div className="mt-4 aspect-[4/3] bg-slate-100 dark:bg-slate-800/50 rounded-lg flex items-center justify-center">
-                    <span className="text-sm">Your Ad Here</span>
+                    <span className="text-sm text-slate-400 dark:text-slate-500">Your Ad Here</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Random Post */}
+              <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm transition-all duration-300 p-2.5">
+                {allPosts
+                  .filter(p => p.slug !== slug && p.status === 'published')
+                  .sort(() => Math.random() - 0.5)
+                  .slice(0, 1)
+                  .map(post => (
+                    <Link
+                      key={post.slug}
+                      to={`/blog/${post.slug}`}
+                      className="block group"
+                    >
+                      <div className="aspect-[3/1] mb-1.5 overflow-hidden rounded-lg">
+                        {post.featured_image ? (
+                          <img
+                            src={post.featured_image}
+                            alt={post.title}
+                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-300 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      <h4 className="font-medium text-xs text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-2">{post.title}</h4>
+                      <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                        <time dateTime={post.created_at}>
+                          {format(parseISO(post.created_at), 'MMM d, yyyy')}
+                        </time>
+                        <span>•</span>
+                        <span>5 min read</span>
+                      </div>
+                    </Link>
+                  ))}
+              </div>
+
+              {/* Second Ad Space */}
+              <div className="bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm transition-all duration-300 p-6">
+                <div className="text-center text-slate-600 dark:text-slate-400">
+                  <p className="text-sm font-medium">Advertisement Space</p>
+                  <div className="mt-4 aspect-[4/3] bg-slate-100 dark:bg-slate-800/50 rounded-lg flex items-center justify-center">
+                    <span className="text-sm text-slate-400 dark:text-slate-500">Your Ad Here</span>
                   </div>
                 </div>
               </div>
