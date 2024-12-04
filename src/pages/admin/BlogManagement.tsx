@@ -77,7 +77,7 @@ export default function BlogManagement() {
       excerpt: post.excerpt,
       featured_image: post.featured_image,
       status: post.status,
-      tags: [], // Since we don't have tags in the database yet
+      tags: post.tags || [], // Pass the post's tags
     };
   };
 

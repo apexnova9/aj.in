@@ -125,12 +125,34 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
   };
 
   const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && tagInput.trim()) {
+    if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
-      if (!formData.tags.includes(tagInput.trim())) {
+      const tags = tagInput.split(',').map(tag => tag.trim()).filter(tag => tag);
+      const newTags = tags.filter(tag => !formData.tags.includes(tag));
+      
+      if (newTags.length > 0) {
         setFormData(prev => ({
           ...prev,
-          tags: [...prev.tags, tagInput.trim()]
+          tags: [...prev.tags, ...newTags]
+        }));
+      }
+      setTagInput('');
+    }
+  };
+
+  const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setTagInput(value);
+    
+    // If the input ends with a comma, process the tags
+    if (value.endsWith(',')) {
+      const tags = value.split(',').map(tag => tag.trim()).filter(tag => tag);
+      const newTags = tags.filter(tag => !formData.tags.includes(tag));
+      
+      if (newTags.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          tags: [...prev.tags, ...newTags]
         }));
       }
       setTagInput('');
@@ -322,9 +344,9 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
           <input
             type="text"
             value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
+            onChange={handleTagInputChange}
             onKeyDown={handleTagInputKeyDown}
-            placeholder="Add a tag..."
+            placeholder="Add tags (comma-separated or press Enter)"
             className="flex-1 min-w-[200px] rounded-md border border-slate-300 dark:border-slate-600
               bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-1"
           />
