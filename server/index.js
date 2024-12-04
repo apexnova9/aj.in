@@ -9,10 +9,8 @@ const PORT = 3002;
 
 // Middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? 'https://amitjha.in'  // Update this to your production domain
-    : ['http://localhost:3000', 'http://localhost:3002'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: 'http://localhost:3002',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
@@ -51,29 +49,185 @@ app.use((req, res, next) => {
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));
 
+// Category Management Routes
+app.get('/api/categories', async (req, res) => {
+  try {
+    const categories = await db.all(`
+      SELECT c.*,
+             p.name as parent_name,
+             (SELECT COUNT(*) FROM post_categories WHERE category_id = c.id) as post_count
+      FROM categories c
+      LEFT JOIN categories p ON c.parent_id = p.id
+      ORDER BY c.parent_id NULLS FIRST, c.name
+    `);
+    res.json(categories);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).json({ error: 'Failed to fetch categories' });
+  }
+});
+
+app.post('/api/categories', async (req, res) => {
+  try {
+    const { name, description, parent_id } = req.body;
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+    // Check if slug already exists
+    const existing = await db.get('SELECT id FROM categories WHERE slug = ?', [slug]);
+    if (existing) {
+      return res.status(400).json({ error: 'Category with this name already exists' });
+    }
+
+    // If parent_id is provided, verify it exists
+    if (parent_id) {
+      const parentExists = await db.get('SELECT id FROM categories WHERE id = ?', [parent_id]);
+      if (!parentExists) {
+        return res.status(400).json({ error: 'Parent category not found' });
+      }
+    }
+
+    const result = await db.run(`
+      INSERT INTO categories (name, slug, description, parent_id)
+      VALUES (?, ?, ?, ?)
+    `, [name, slug, description, parent_id]);
+
+    const newCategory = await db.get('SELECT * FROM categories WHERE id = ?', [result.lastID]);
+    res.status(201).json(newCategory);
+  } catch (error) {
+    console.error('Error creating category:', error);
+    res.status(500).json({ error: 'Failed to create category' });
+  }
+});
+
+app.put('/api/categories/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, parent_id } = req.body;
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+    // Check if new slug would conflict with existing categories (excluding current category)
+    const existing = await db.get('SELECT id FROM categories WHERE slug = ? AND id != ?', [slug, id]);
+    if (existing) {
+      return res.status(400).json({ error: 'Category with this name already exists' });
+    }
+
+    // Prevent setting parent to self or to own child
+    if (parent_id) {
+      if (parseInt(parent_id) === parseInt(id)) {
+        return res.status(400).json({ error: 'Category cannot be its own parent' });
+      }
+      
+      // Check if proposed parent is actually a child of this category
+      const children = await db.all(`
+        WITH RECURSIVE child_categories AS (
+          SELECT id FROM categories WHERE parent_id = ?
+          UNION ALL
+          SELECT c.id FROM categories c
+          INNER JOIN child_categories cc ON c.parent_id = cc.id
+        )
+        SELECT id FROM child_categories
+      `, [id]);
+      
+      if (children.some(child => child.id === parseInt(parent_id))) {
+        return res.status(400).json({ error: 'Cannot set a child category as parent' });
+      }
+    }
+
+    await db.run(`
+      UPDATE categories 
+      SET name = ?, slug = ?, description = ?, parent_id = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `, [name, slug, description, parent_id, id]);
+
+    const updatedCategory = await db.get('SELECT * FROM categories WHERE id = ?', [id]);
+    res.json(updatedCategory);
+  } catch (error) {
+    console.error('Error updating category:', error);
+    res.status(500).json({ error: 'Failed to update category' });
+  }
+});
+
+app.delete('/api/categories/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Check if category has children
+    const hasChildren = await db.get('SELECT 1 FROM categories WHERE parent_id = ?', [id]);
+    if (hasChildren) {
+      return res.status(400).json({ error: 'Cannot delete category with subcategories' });
+    }
+
+    await db.run('DELETE FROM categories WHERE id = ?', [id]);
+    res.json({ message: 'Category deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting category:', error);
+    res.status(500).json({ error: 'Failed to delete category' });
+  }
+});
+
 // API Routes
 app.get('/api/posts', async (req, res) => {
   try {
     console.log('Fetching all posts...');
     const posts = await db.all(`
-      SELECT p.*, GROUP_CONCAT(t.name) as tags
+      SELECT 
+        p.*,
+        GROUP_CONCAT(DISTINCT t.name) as tags,
+        COALESCE(
+          '[' || GROUP_CONCAT(
+            DISTINCT json_object(
+              'id', c.id,
+              'name', c.name,
+              'slug', c.slug,
+              'description', c.description,
+              'parent_id', c.parent_id,
+              'parent_name', pc.name
+            )
+          ) || ']',
+          '[]'
+        ) as categories
       FROM posts p
       LEFT JOIN post_tags pt ON p.id = pt.post_id
       LEFT JOIN tags t ON pt.tag_id = t.id
+      LEFT JOIN post_categories pc_link ON p.id = pc_link.post_id
+      LEFT JOIN categories c ON pc_link.category_id = c.id
+      LEFT JOIN categories pc ON c.parent_id = pc.id
       GROUP BY p.id
       ORDER BY p.created_at DESC
     `);
-    console.log(`Found ${posts.length} posts`);
     
-    // Parse tags string into array
-    posts.forEach(post => {
-      post.tags = post.tags ? post.tags.split(',') : [];
+    // Process each post's tags and categories
+    const processedPosts = posts.map(post => {
+      try {
+        // Handle tags
+        post.tags = post.tags ? post.tags.split(',').filter(Boolean) : [];
+        
+        // Handle categories
+        try {
+          post.categories = JSON.parse(post.categories);
+        } catch (e) {
+          console.error('Error parsing categories for post:', post.id, e);
+          post.categories = [];
+        }
+        
+        return post;
+      } catch (e) {
+        console.error('Error processing post:', post.id, e);
+        return {
+          ...post,
+          tags: [],
+          categories: []
+        };
+      }
     });
-    
-    res.json(posts);
+
+    res.json(processedPosts);
   } catch (error) {
     console.error('Error fetching posts:', error);
-    res.status(500).json({ error: 'Failed to fetch posts', details: error.message });
+    res.status(500).json({ 
+      error: 'Failed to fetch posts', 
+      details: error.message 
+    });
   }
 });
 
@@ -84,10 +238,25 @@ app.get('/api/posts/slug/:slug', async (req, res) => {
     console.log('Fetching post by slug:', slug);
     
     const post = await db.get(`
-      SELECT p.*, GROUP_CONCAT(t.name) as tags
+      SELECT 
+        p.*,
+        GROUP_CONCAT(DISTINCT t.name) as tags,
+        '[' || GROUP_CONCAT(
+          json_object(
+            'id', c.id,
+            'name', c.name,
+            'slug', c.slug,
+            'description', c.description,
+            'parent_id', c.parent_id,
+            'parent_name', pc.name
+          )
+        ) || ']' as categories
       FROM posts p
       LEFT JOIN post_tags pt ON p.id = pt.post_id
       LEFT JOIN tags t ON pt.tag_id = t.id
+      LEFT JOIN post_categories pc_rel ON p.id = pc_rel.post_id
+      LEFT JOIN categories c ON pc_rel.category_id = c.id
+      LEFT JOIN categories pc ON c.parent_id = pc.id
       WHERE p.slug = ?
       GROUP BY p.id
     `, [slug]);
@@ -97,8 +266,16 @@ app.get('/api/posts/slug/:slug', async (req, res) => {
       return res.status(404).json({ error: 'Post not found' });
     }
     
-    // Parse tags string into array
+    // Parse tags and categories
     post.tags = post.tags ? post.tags.split(',') : [];
+    try {
+      post.categories = post.categories 
+        ? JSON.parse(post.categories)
+        : [];
+    } catch (e) {
+      console.error('Error processing categories for post:', post.id, e);
+      post.categories = [];
+    }
     
     console.log('Found post:', post.title);
     res.json(post);
@@ -112,20 +289,20 @@ app.get('/api/posts/slug/:slug', async (req, res) => {
 app.post('/api/posts', upload.single('featured_image'), async (req, res) => {
   try {
     const { title, content, excerpt, status = 'draft' } = req.body;
-    let tags = [];
+    let tags = [], category_ids = [];
     
-    // Parse tags from the form data
+    // Parse tags and categories from the form data
     try {
       tags = req.body.tags ? JSON.parse(req.body.tags) : [];
-      console.log('Parsed tags:', tags);
+      category_ids = req.body.category_ids ? JSON.parse(req.body.category_ids) : [];
+      console.log('Parsed tags:', tags, 'categories:', category_ids);
     } catch (e) {
-      console.error('Error parsing tags:', e);
+      console.error('Error parsing tags or categories:', e);
       tags = req.body.tags ? req.body.tags.split(',').map(t => t.trim()).filter(t => t) : [];
+      category_ids = [];
     }
     
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    console.log('Creating new post:', { title, slug, status, tags });
-    
     const featured_image = req.file ? `/uploads/${req.file.filename}` : null;
     
     const result = await db.run(
@@ -133,16 +310,14 @@ app.post('/api/posts', upload.single('featured_image'), async (req, res) => {
       [title, slug, content, excerpt, featured_image, status]
     );
     
+    // Handle tags
     if (tags.length > 0) {
       for (const tagName of tags) {
-        // Insert or get tag
         let tag = await db.get('SELECT id FROM tags WHERE name = ?', [tagName]);
         if (!tag) {
           const tagResult = await db.run('INSERT INTO tags (name) VALUES (?)', [tagName]);
           tag = { id: tagResult.lastID };
         }
-        
-        // Create post-tag relationship
         await db.run(
           'INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)',
           [result.lastID, tag.id]
@@ -150,17 +325,43 @@ app.post('/api/posts', upload.single('featured_image'), async (req, res) => {
       }
     }
     
-    // Fetch the created post with tags
+    // Handle categories
+    if (category_ids.length > 0) {
+      for (const categoryId of category_ids) {
+        await db.run(
+          'INSERT INTO post_categories (post_id, category_id) VALUES (?, ?)',
+          [result.lastID, categoryId]
+        );
+      }
+    }
+    
+    // Fetch the created post with tags and categories
     const createdPost = await db.get(`
-      SELECT p.*, GROUP_CONCAT(t.name) as tags
+      SELECT 
+        p.*,
+        GROUP_CONCAT(DISTINCT t.name) as tags,
+        GROUP_CONCAT(DISTINCT json_object(
+          'id', c.id,
+          'name', c.name,
+          'slug', c.slug,
+          'description', c.description,
+          'parent_id', c.parent_id,
+          'parent_name', pc.name
+        )) as categories
       FROM posts p
       LEFT JOIN post_tags pt ON p.id = pt.post_id
       LEFT JOIN tags t ON pt.tag_id = t.id
+      LEFT JOIN post_categories pc_rel ON p.id = pc_rel.post_id
+      LEFT JOIN categories c ON pc_rel.category_id = c.id
+      LEFT JOIN categories pc ON c.parent_id = pc.id
       WHERE p.id = ?
       GROUP BY p.id
     `, [result.lastID]);
     
     createdPost.tags = createdPost.tags ? createdPost.tags.split(',') : [];
+    createdPost.categories = createdPost.categories 
+      ? createdPost.categories.split(',').map(c => JSON.parse(c)).filter(c => c.id)
+      : [];
     
     console.log('Post created successfully:', createdPost);
     res.status(201).json(createdPost);
@@ -173,80 +374,127 @@ app.post('/api/posts', upload.single('featured_image'), async (req, res) => {
 // Update post
 app.put('/api/posts/:id', upload.single('featured_image'), async (req, res) => {
   try {
+    await db.run('BEGIN TRANSACTION');
+    
     const { id } = req.params;
-    const { title, content, excerpt, status = 'draft' } = req.body;
-    let tags = [];
-    
-    // Parse tags from the form data
+    let { title, content, excerpt, status = 'draft', tags = '[]', category_ids = '[]' } = req.body;
+    let featured_image = null;
+
+    // Parse tags and category_ids from JSON strings
     try {
-      tags = req.body.tags ? JSON.parse(req.body.tags) : [];
-      console.log('Parsed tags:', tags);
+      tags = JSON.parse(tags);
+      category_ids = JSON.parse(category_ids);
     } catch (e) {
-      console.error('Error parsing tags:', e);
-      tags = req.body.tags ? req.body.tags.split(',').map(t => t.trim()).filter(t => t) : [];
+      console.error('Error parsing tags or category_ids:', e);
+      tags = [];
+      category_ids = [];
     }
-    
-    console.log('Processing update with:', { title, content, excerpt, status, tags });
-    
-    // Validate required fields
-    if (!title) {
-      console.error('Title is missing');
-      return res.status(400).json({ error: 'Title is required' });
-    }
-    
-    // Update post
-    let updateFields = ['title = ?', 'content = ?', 'excerpt = ?', 'status = ?'];
-    let params = [title, content, excerpt, status];
-    
+
     if (req.file) {
-      updateFields.push('featured_image = ?');
-      params.push(`/uploads/${req.file.filename}`);
+      featured_image = req.file.filename;
     }
-    
-    params.push(id);
-    
-    await db.run(
-      `UPDATE posts SET ${updateFields.join(', ')} WHERE id = ?`,
-      params
-    );
-    
-    // Update tags
-    // First, remove all existing tags for this post
+
+    // Update post
+    await db.run(`
+      UPDATE posts 
+      SET title = ?, content = ?, excerpt = ?, status = ?, 
+          featured_image = COALESCE(?, featured_image),
+          updated_at = DATETIME('now')
+      WHERE id = ?
+    `, [title, content, excerpt, status, featured_image, id]);
+
+    // Delete existing tags and categories
     await db.run('DELETE FROM post_tags WHERE post_id = ?', [id]);
-    
-    // Then add new tags
-    if (tags.length > 0) {
-      for (const tagName of tags) {
-        // Insert or get tag
-        let tag = await db.get('SELECT id FROM tags WHERE name = ?', [tagName]);
-        if (!tag) {
-          const tagResult = await db.run('INSERT INTO tags (name) VALUES (?)', [tagName]);
-          tag = { id: tagResult.lastID };
-        }
+    await db.run('DELETE FROM post_categories WHERE post_id = ?', [id]);
+
+    // Insert new tags
+    if (Array.isArray(tags) && tags.length > 0) {
+      for (const tag of tags) {
+        if (!tag || typeof tag !== 'string') continue;
+        const trimmedTag = tag.trim();
+        if (!trimmedTag) continue;
+
+        // Get or create tag
+        let tagResult = await db.get('SELECT id FROM tags WHERE name = ?', [trimmedTag]);
+        let tagId;
         
-        // Create post-tag relationship
+        if (!tagResult) {
+          const result = await db.run('INSERT INTO tags (name) VALUES (?)', [trimmedTag]);
+          tagId = result.lastID;
+        } else {
+          tagId = tagResult.id;
+        }
+
+        // Insert tag-post relation
         await db.run(
           'INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)',
-          [id, tag.id]
+          [id, tagId]
         );
       }
     }
-    
-    // Fetch the updated post with tags
-    const updatedPost = await db.get(`
-      SELECT p.*, GROUP_CONCAT(t.name) as tags
+
+    // Insert new categories
+    if (Array.isArray(category_ids) && category_ids.length > 0) {
+      for (const categoryId of category_ids) {
+        if (!categoryId) continue;
+        
+        // Check if category exists
+        const category = await db.get('SELECT 1 FROM categories WHERE id = ?', [categoryId]);
+        if (category) {
+          await db.run(
+            'INSERT INTO post_categories (post_id, category_id) VALUES (?, ?)',
+            [id, categoryId]
+          );
+        }
+      }
+    }
+
+    await db.run('COMMIT');
+
+    // Fetch updated post
+    const post = await db.get(`
+      SELECT 
+        p.*,
+        GROUP_CONCAT(DISTINCT t.name) as tags,
+        COALESCE(
+          '[' || GROUP_CONCAT(
+            DISTINCT json_object(
+              'id', c.id,
+              'name', c.name,
+              'slug', c.slug,
+              'description', c.description,
+              'parent_id', c.parent_id,
+              'parent_name', pc.name
+            )
+          ) || ']',
+          '[]'
+        ) as categories
       FROM posts p
       LEFT JOIN post_tags pt ON p.id = pt.post_id
       LEFT JOIN tags t ON pt.tag_id = t.id
+      LEFT JOIN post_categories pc_link ON p.id = pc_link.post_id
+      LEFT JOIN categories c ON pc_link.category_id = c.id
+      LEFT JOIN categories pc ON c.parent_id = pc.id
       WHERE p.id = ?
       GROUP BY p.id
     `, [id]);
-    
-    updatedPost.tags = updatedPost.tags ? updatedPost.tags.split(',') : [];
-    
-    console.log('Post updated successfully:', updatedPost);
-    res.json(updatedPost);
+
+    if (!post) {
+      throw new Error('Post not found after update');
+    }
+
+    // Parse tags and categories
+    post.tags = post.tags ? post.tags.split(',').filter(Boolean) : [];
+    try {
+      post.categories = JSON.parse(post.categories);
+    } catch (e) {
+      console.error('Error parsing categories for post:', post.id, e);
+      post.categories = [];
+    }
+
+    res.json(post);
   } catch (error) {
+    await db.run('ROLLBACK');
     console.error('Error updating post:', error);
     res.status(500).json({ error: 'Failed to update post', details: error.message });
   }

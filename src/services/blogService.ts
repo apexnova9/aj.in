@@ -31,7 +31,7 @@ export const blogService = {
 
   async getPostBySlug(slug: string): Promise<BlogPost> {
     try {
-      console.log('Fetching post with slug:', slug, 'from URL:', `${API_URL}/posts/slug/${slug}`);
+      console.log('Fetching post with slug:', slug);
       const response = await fetch(`${API_URL}/posts/slug/${slug}`);
       console.log('Response:', response);
       
@@ -89,9 +89,14 @@ export const blogService = {
       formData.append('excerpt', data.excerpt || '');
       formData.append('status', data.status || 'draft');
       
-      // Handle tags
+      // Handle tags - ensure it's sent as a JSON string array
       if (Array.isArray(data.tags)) {
         formData.append('tags', JSON.stringify(data.tags));
+      }
+      
+      // Handle category_ids - ensure it's sent as a JSON string array
+      if (Array.isArray(data.category_ids)) {
+        formData.append('category_ids', JSON.stringify(data.category_ids));
       }
       
       // Handle featured image
@@ -99,7 +104,13 @@ export const blogService = {
         formData.append('featured_image', data.featured_image);
       }
       
-      console.log('Sending form data:', Object.fromEntries(formData.entries()));
+      console.log('Sending form data:', {
+        title: data.title,
+        excerpt: data.excerpt,
+        tags: data.tags,
+        category_ids: data.category_ids,
+        status: data.status
+      });
       
       const response = await fetch(`${API_URL}/posts/${id}`, {
         method: 'PUT',

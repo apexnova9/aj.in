@@ -1,103 +1,88 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BlogPost } from '../../types/blog';
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { Tag, Calendar, FolderTree } from 'lucide-react';
 
 interface BlogCardProps {
   post: BlogPost;
-  featured?: boolean;
 }
 
-export function BlogCard({ post, featured = false }: BlogCardProps) {
-  const formattedDate = new Date(post.created_at).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-
-  const estimatedReadTime = Math.ceil(post.content.split(/\s+/).length / 200);
+export const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
-    <article className={`
-      group bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 
-      backdrop-blur-sm transition-all duration-300 hover:shadow-lg
-      ${featured ? 'lg:grid lg:grid-cols-2 lg:gap-8' : 'flex flex-col h-full'}
-    `}>
+    <article className="group bg-white dark:bg-slate-800/50 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden border border-slate-200/50 dark:border-slate-700/50">
       {post.featured_image && (
-        <Link 
-          to={`/blog/${post.slug}`}
-          className={`
-            block overflow-hidden
-            ${featured ? 'lg:h-[500px] h-64' : 'h-48'}
-          `}
-        >
+        <Link to={`/blog/${post.slug}`} className="block aspect-[16/9] overflow-hidden">
           <img
             src={post.featured_image}
-            alt={`Cover image for ${post.title}`}
-            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+            alt={post.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </Link>
       )}
       
-      <div className={`
-        flex flex-col
-        ${featured ? 'p-8 lg:py-12' : 'p-6'}
-        ${featured ? 'justify-center' : ''}
-      `}>
-        {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {post.tags.map(tag => (
-              <span
-                key={tag}
-                className="px-3 py-1 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 
-                  rounded-full text-sm font-medium border border-transparent dark:border-blue-500/20"
-              >
-                {tag}
-              </span>
-            ))}
+      <div className="p-6">
+        {/* Categories */}
+        {post.categories && post.categories.length > 0 && (
+          <div className="flex items-center gap-2 mb-3 text-sm">
+            <FolderTree className="w-4 h-4 text-blue-500" />
+            <div className="flex flex-wrap gap-2">
+              {post.categories.map(category => (
+                <Link
+                  key={category.id}
+                  to={`/blog?category=${category.id}`}
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Title */}
-        <Link
-          to={`/blog/${post.slug}`}
-          className="text-xl font-bold text-gray-900 dark:text-gray-100 
-            group-hover:text-blue-600 dark:group-hover:text-blue-400 
-            transition-colors duration-300 mb-3"
-        >
-          {post.title}
-        </Link>
+        <h2 className="text-xl font-semibold mb-3 group-hover:text-blue-500 transition-colors">
+          <Link to={`/blog/${post.slug}`}>
+            {post.title}
+          </Link>
+        </h2>
 
-        {/* Meta Info */}
-        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
-          <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2" />
-            {formattedDate}
-          </div>
-          <div className="flex items-center">
-            <Clock className="w-4 h-4 mr-2" />
-            {estimatedReadTime} min read
-          </div>
-        </div>
-
-        {/* Excerpt */}
-        <p className="text-gray-600 dark:text-gray-300 mb-6 line-clamp-3">
+        <p className="text-slate-600 dark:text-slate-300 mb-4 line-clamp-2">
           {post.excerpt}
         </p>
 
-        {/* Read More Link */}
-        <div className="mt-auto">
-          <Link
-            to={`/blog/${post.slug}`}
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 
-              hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
-          >
-            Read More
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Link>
+        <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-1">
+            <Calendar className="w-4 h-4" />
+            <time dateTime={post.created_at}>
+              {formatDate(post.created_at)}
+            </time>
+          </div>
+
+          {post.tags && post.tags.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Tag className="w-4 h-4" />
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map(tag => (
+                  <Link
+                    key={tag}
+                    to={`/blog?tag=${encodeURIComponent(tag)}`}
+                    className="hover:text-blue-500 transition-colors"
+                  >
+                    #{tag}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </article>
   );
-}
+};

@@ -1,5 +1,17 @@
 export type PostStatus = 'draft' | 'published';
 
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  parent_id: number | null;
+  parent_name: string | null;
+  post_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface BlogPost {
   id: number;
   title: string;
@@ -11,6 +23,7 @@ export interface BlogPost {
   created_at: string;
   updated_at: string;
   tags: string[];
+  categories: Category[];
 }
 
 export interface BlogPostInput {
@@ -20,6 +33,7 @@ export interface BlogPostInput {
   featured_image?: File | string | null;
   status: PostStatus;
   tags: string[];
+  category_ids: number[];
 }
 
 export interface BlogPostResponse {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { LogOut, FileText, Settings, User } from 'lucide-react';
+import { LogOut, FileText, Settings, User, FolderTree } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Dashboard() {
@@ -19,6 +19,12 @@ export default function Dashboard() {
       description: 'Create, edit, and manage blog posts',
       icon: FileText,
       link: '/admin/blog'
+    },
+    {
+      title: 'Category Management',
+      description: 'Organize blog posts with categories and subcategories',
+      icon: FolderTree,
+      link: '/admin/categories'
     },
     {
       title: 'Profile Settings',

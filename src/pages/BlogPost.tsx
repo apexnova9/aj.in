@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { BlogPost as BlogPostType } from '../types/blog';
+import { BlogPost as BlogPostType, Category } from '../types/blog';
 import { blogService } from '../services/blogService';
 import { format, parseISO } from 'date-fns';
 import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Breadcrumb } from '../components/common/Breadcrumb';
+import { Calendar, Tag, FolderTree } from 'lucide-react';
+import { categoryService } from '../services/categoryService';
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -18,19 +20,22 @@ export default function BlogPost() {
   }>({ previous: null, next: null });
   const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
   const [allPosts, setAllPosts] = useState<BlogPostType[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     const fetchPost = async () => {
       if (!slug) return;
       try {
         setLoading(true);
-        const [fetchedPost, fetchedPosts] = await Promise.all([
+        const [fetchedPost, fetchedPosts, categoriesData] = await Promise.all([
           blogService.getPostBySlug(slug),
-          blogService.getPosts()
+          blogService.getPosts(),
+          categoryService.getCategories()
         ]);
         
         setPost(fetchedPost);
         setAllPosts(fetchedPosts);
+        setCategories(categoriesData);
 
         // Find adjacent posts
         const publishedPosts = fetchedPosts.filter(p => p.status === 'published');
@@ -91,6 +96,21 @@ export default function BlogPost() {
     } catch (err) {
       console.error('Error sharing:', err);
     }
+  };
+
+  const getCategoryBreadcrumbs = (category: Category): { label: string, path: string }[] => {
+    const breadcrumbs: { label: string, path: string }[] = [];
+    let currentCategory: Category | undefined = category;
+
+    while (currentCategory) {
+      breadcrumbs.unshift({
+        label: currentCategory.name,
+        path: `/blog?category=${currentCategory.id}`
+      });
+      currentCategory = categories.find(c => c.id === currentCategory?.parent_id);
+    }
+
+    return breadcrumbs;
   };
 
   if (loading) {
@@ -190,6 +210,9 @@ export default function BlogPost() {
             <Breadcrumb
               items={[
                 { label: 'Blog', path: '/blog' },
+                ...(post?.categories?.[0] 
+                  ? getCategoryBreadcrumbs(post.categories[0])
+                  : []),
                 { label: post.title }
               ]}
             />

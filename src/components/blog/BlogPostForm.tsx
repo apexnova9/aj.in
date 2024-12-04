@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { X } from 'lucide-react';
-import { BlogPostInput } from '../../types/blog';
+import { BlogPostInput, Category } from '../../types/blog';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
+import { categoryService } from '../../services/categoryService';
 
 // Quill syntax module - only register if not already registered
 const Quill = ReactQuill.Quill;
@@ -102,10 +103,43 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
     tags: initialData?.tags || [],
     featured_image: initialData?.featured_image || null,
     status: initialData?.status || 'draft',
+    category_ids: initialData?.category_ids || []
   });
   const [tagInput, setTagInput] = useState('');
   const [showHtml, setShowHtml] = useState(false);
   const [htmlContent, setHtmlContent] = useState(initialData?.content || '');
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await categoryService.getCategories();
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Render category options recursively
+  const renderCategoryOptions = (categories: Category[], level = 0) => {
+    return categories.map(category => {
+      const prefix = '\u00A0'.repeat(level * 4) + (level > 0 ? '└─ ' : '');
+      return (
+        <React.Fragment key={category.id}>
+          <option value={category.id}>{prefix + category.name}</option>
+          {(category as any).children?.length > 0 && 
+            renderCategoryOptions((category as any).children, level + 1)}
+        </React.Fragment>
+      );
+    });
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -320,37 +354,68 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
         )}
       </div>
 
-      <div>
+      <div className="space-y-2">
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Tags
         </label>
-        <div className="mt-1 flex flex-wrap gap-2">
-          {formData.tags.map(tag => (
+        <div className="flex flex-wrap gap-2 mb-2">
+          {formData.tags.map((tag, index) => (
             <span
-              key={tag}
-              className="inline-flex items-center px-2 py-1 rounded-md text-sm
-                bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200"
+              key={index}
+              className="inline-flex items-center px-3 py-1 rounded-full text-sm 
+                bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
             >
               {tag}
               <button
                 type="button"
                 onClick={() => removeTag(tag)}
-                className="ml-1 hover:text-blue-800 dark:hover:text-blue-100"
+                className="ml-2 focus:outline-none"
               >
                 <X className="h-4 w-4" />
               </button>
             </span>
           ))}
-          <input
-            type="text"
-            value={tagInput}
-            onChange={handleTagInputChange}
-            onKeyDown={handleTagInputKeyDown}
-            placeholder="Add tags (comma-separated or press Enter)"
-            className="flex-1 min-w-[200px] rounded-md border border-slate-300 dark:border-slate-600
-              bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-1"
-          />
         </div>
+        <input
+          type="text"
+          value={tagInput}
+          onChange={(e) => setTagInput(e.target.value)}
+          onKeyDown={handleTagInputKeyDown}
+          placeholder="Add tags (press Enter or comma to add)"
+          className="w-full px-3 py-2 border border-slate-300 rounded-lg 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 
+            dark:bg-slate-800 dark:border-slate-600 dark:text-white 
+            dark:placeholder-slate-400"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          Categories
+        </label>
+        {isLoadingCategories ? (
+          <div className="animate-pulse h-10 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
+        ) : (
+          <select
+            multiple
+            value={formData.category_ids.map(String)}
+            onChange={(e) => {
+              const selectedOptions = Array.from(e.target.selectedOptions);
+              const selectedIds = selectedOptions.map(option => Number(option.value));
+              setFormData(prev => ({ ...prev, category_ids: selectedIds }));
+            }}
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg 
+              focus:outline-none focus:ring-2 focus:ring-blue-500 
+              dark:bg-slate-800 dark:border-slate-600 dark:text-white
+              min-h-[120px]"
+          >
+            <option value="">Select categories (multiple)</option>
+            {renderCategoryOptions(categoryService.buildCategoryTree(categories))}
+          </select>
+        )}
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Hold Ctrl (Windows) or Command (Mac) to select multiple categories
+        </p>
       </div>
 
       <div>

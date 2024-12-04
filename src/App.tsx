@@ -15,6 +15,7 @@ const Contact = React.lazy(() => import('./pages/Contact'));
 const AdminLogin = React.lazy(() => import('./pages/admin/Login'));
 const AdminDashboard = React.lazy(() => import('./pages/admin/Dashboard'));
 const BlogManagement = React.lazy(() => import('./pages/admin/BlogManagement'));
+const CategoryManagement = React.lazy(() => import('./pages/admin/CategoryManagement'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 
 // Loading component
@@ -100,6 +101,15 @@ function App() {
                           </ProtectedRoute>
                         } 
                       />
+                      <Route 
+                        path="/admin/categories" 
+                        element={
+                          <ProtectedRoute>
+                            <CategoryManagement />
+                          </ProtectedRoute>
+                        } 
+                      />
+                      <Route path="/admin/categories" element={<CategoryManagement />} />
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </Suspense>
