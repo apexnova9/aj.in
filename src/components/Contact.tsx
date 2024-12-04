@@ -15,40 +15,40 @@ export function Contact() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <a
               href="mailto:your.email@example.com"
-              className="flex flex-col items-center p-6 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
+              className="flex flex-col items-center p-6 bg-white dark:bg-[#022A5E]/90 rounded-xl hover:bg-slate-100 dark:hover:bg-[#022A5E] transition-colors border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm"
             >
               <Mail className="text-blue-500 mb-3" size={24} />
-              <span className="text-slate-900 dark:text-white">Email</span>
+              <span className="text-slate-900 dark:text-slate-300">Email</span>
             </a>
             
             <a
               href="https://linkedin.com/in/your-profile"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center p-6 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
+              className="flex flex-col items-center p-6 bg-white dark:bg-[#022A5E]/90 rounded-xl hover:bg-slate-100 dark:hover:bg-[#022A5E] transition-colors border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm"
             >
               <Linkedin className="text-blue-500 mb-3" size={24} />
-              <span className="text-slate-900 dark:text-white">LinkedIn</span>
+              <span className="text-slate-900 dark:text-slate-300">LinkedIn</span>
             </a>
             
             <a
               href="https://github.com/your-username"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center p-6 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
+              className="flex flex-col items-center p-6 bg-white dark:bg-[#022A5E]/90 rounded-xl hover:bg-slate-100 dark:hover:bg-[#022A5E] transition-colors border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm"
             >
               <Github className="text-blue-500 mb-3" size={24} />
-              <span className="text-slate-900 dark:text-white">GitHub</span>
+              <span className="text-slate-900 dark:text-slate-300">GitHub</span>
             </a>
             
             <a
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center p-6 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
+              className="flex flex-col items-center p-6 bg-white dark:bg-[#022A5E]/90 rounded-xl hover:bg-slate-100 dark:hover:bg-[#022A5E] transition-colors border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm"
             >
               <FileText className="text-blue-500 mb-3" size={24} />
-              <span className="text-slate-900 dark:text-white">Resume</span>
+              <span className="text-slate-900 dark:text-slate-300">Resume</span>
             </a>
           </div>
         </div>
