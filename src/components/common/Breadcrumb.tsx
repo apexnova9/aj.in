@@ -12,6 +12,9 @@ interface BreadcrumbProps {
 }
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
+  // Filter out any empty or undefined items
+  const validItems = items.filter(item => item && item.label);
+
   return (
     <nav className="flex" aria-label="Breadcrumb">
       <ol className="flex items-center space-x-2">
@@ -23,7 +26,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
             <Home className="h-4 w-4 text-blue-500 dark:text-blue-400" />
           </Link>
         </li>
-        {items.map((item, index) => (
+        {validItems.map((item, index) => (
           <li key={index} className="flex items-center">
             <ChevronRight className="h-4 w-4 text-blue-500 dark:text-blue-400" />
             {item.path ? (

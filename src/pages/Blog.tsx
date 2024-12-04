@@ -134,10 +134,16 @@ export default function Blog() {
           <Breadcrumb
             items={[
               { label: 'Blog', path: '/blog' },
-              ...(selectedCategory ? [{
-                label: categories.find(c => c.id === selectedCategory)?.name || '',
-                path: `/blog?category=${selectedCategory}`
-              }] : [])
+              ...(selectedCategory ? 
+                categoryService.getCategoryPath(
+                  categories.find(c => c.id === selectedCategory),
+                  categories
+                ).map(cat => ({
+                  label: cat.name,
+                  path: `/blog?category=${cat.id}`
+                }))
+                : []
+              )
             ]}
           />
         </div>
