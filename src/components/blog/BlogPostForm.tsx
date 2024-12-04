@@ -1,8 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { X } from 'lucide-react';
 import { BlogPostInput } from '../../types/blog';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.css';
+
+// Quill syntax module - only register if not already registered
+const Quill = ReactQuill.Quill;
+if (!Quill.imports['modules/syntax']) {
+  const Syntax = Quill.import('modules/syntax');
+  Quill.register('modules/syntax', Syntax);
+}
+
+// Configure highlight.js
+hljs.configure({
+  languages: ['javascript', 'typescript', 'python', 'bash', 'json', 'html', 'css']
+});
 
 interface BlogPostFormProps {
   initialData?: BlogPostInput;
@@ -10,31 +24,21 @@ interface BlogPostFormProps {
   onCancel: () => void;
 }
 
-export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormProps) {
-  const [formData, setFormData] = useState<BlogPostInput>({
-    title: initialData?.title || '',
-    content: initialData?.content || '',
-    excerpt: initialData?.excerpt || '',
-    tags: initialData?.tags || [],
-    status: initialData?.status || 'draft',
-    featured_image: initialData?.featured_image || null,
-  });
-  const [tagInput, setTagInput] = useState('');
-  const [showHtml, setShowHtml] = useState(false);
+function CustomEditor({ value, onChange }: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const quillRef = useRef<ReactQuill>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Load AlloyEditor styles
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cdn.alloyeditor.com/alloy-editor/2.14.7/assets/alloy-editor-ocean-min.css';
-    document.head.appendChild(link);
-
-    return () => {
-      document.head.removeChild(link);
-    };
+    setMounted(true);
   }, []);
 
-  const modules = {
+  const modules = useMemo(() => ({
+    syntax: {
+      highlight: (text: string) => hljs.highlightAuto(text).value,
+    },
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
       [{ 'font': [] }],
@@ -43,89 +47,113 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
       [{ 'color': [] }, { 'background': [] }],
       [{ 'script': 'sub'}, { 'script': 'super' }],
       [{ 'align': [] }],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
       ['blockquote', 'code-block'],
-      ['link', 'image', 'video'],
+      ['link', 'image'],
       ['clean']
     ],
-  };
+    clipboard: {
+      matchVisual: false
+    }
+  }), []);
 
   const formats = [
     'header', 'font', 'size',
     'bold', 'italic', 'underline', 'strike',
     'color', 'background',
-    'script',
+    'script', 'super', 'sub',
     'align',
     'list', 'bullet', 'indent',
-    'link', 'image', 'video',
+    'link', 'image',
     'blockquote', 'code-block'
   ];
 
+  if (!mounted) {
+    return <div className="min-h-[300px] bg-white dark:bg-slate-800 rounded-md border border-slate-300 dark:border-slate-600" />;
+  }
+
+  return (
+    <div className="editor-container">
+      <ReactQuill
+        ref={quillRef}
+        theme="snow"
+        value={value}
+        onChange={onChange}
+        modules={modules}
+        formats={formats}
+        className="bg-white dark:bg-slate-800 rounded-md border border-slate-300 
+          dark:border-slate-600 [&_.ql-toolbar]:border-slate-300 dark:[&_.ql-toolbar]:border-slate-600 
+          [&_.ql-toolbar]:bg-slate-50 dark:[&_.ql-toolbar]:bg-slate-700
+          [&_.ql-container]:border-slate-300 dark:[&_.ql-container]:border-slate-600
+          [&_.ql-editor]:min-h-[300px] [&_.ql-editor]:text-slate-900 dark:[&_.ql-editor]:text-white
+          [&_.ql-picker]:text-slate-900 dark:[&_.ql-picker]:text-white
+          [&_.ql-stroke]:stroke-slate-700 dark:[&_.ql-stroke]:stroke-slate-300
+          [&_.ql-fill]:fill-slate-700 dark:[&_.ql-fill]:fill-slate-300"
+      />
+    </div>
+  );
+}
+
+export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormProps) {
+  const [formData, setFormData] = useState<BlogPostInput>({
+    title: initialData?.title || '',
+    content: initialData?.content || '',
+    excerpt: initialData?.excerpt || '',
+    tags: initialData?.tags || [],
+    featured_image: initialData?.featured_image || null,
+    status: initialData?.status || 'draft',
+  });
+  const [tagInput, setTagInput] = useState('');
+  const [showHtml, setShowHtml] = useState(false);
+  const [htmlContent, setHtmlContent] = useState(initialData?.content || '');
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    console.log('Form field changed:', name, value);
-    setFormData(prev => {
-      const newData = { ...prev, [name]: value };
-      console.log('Updated form data:', newData);
-      return newData;
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleEditorChange = (content: string) => {
     setFormData(prev => ({ ...prev, content }));
+    if (!showHtml) {
+      setHtmlContent(content);
+    }
   };
 
   const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && tagInput.trim()) {
       e.preventDefault();
-      console.log('Adding tag:', tagInput.trim());
       if (!formData.tags.includes(tagInput.trim())) {
-        setFormData(prev => {
-          const newTags = [...prev.tags, tagInput.trim()];
-          console.log('Updated tags:', newTags);
-          return {
-            ...prev,
-            tags: newTags
-          };
-        });
+        setFormData(prev => ({
+          ...prev,
+          tags: [...prev.tags, tagInput.trim()]
+        }));
       }
       setTagInput('');
     }
   };
 
   const removeTag = (tagToRemove: string) => {
-    console.log('Removing tag:', tagToRemove);
-    setFormData(prev => {
-      const newTags = prev.tags.filter(tag => tag !== tagToRemove);
-      console.log('Updated tags:', newTags);
-      return {
-        ...prev,
-        tags: newTags
-      };
-    });
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove)
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate required fields
-    if (!formData.title.trim()) {
-      console.error('Title is required');
-      return;
+    onSubmit(formData);
+  };
+
+  const toggleHtmlView = () => {
+    if (showHtml) {
+      handleEditorChange(htmlContent);
     }
-    
-    console.log('Submitting form data:', formData);
-    onSubmit({
-      ...formData,
-      title: formData.title.trim(),
-      content: formData.content || '',
-      excerpt: formData.excerpt || '',
-      status: formData.status || 'draft',
-      tags: formData.tags || [],
-    });
+    setShowHtml(!showHtml);
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +170,68 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <style>{`
+        .ql-editor {
+          font-size: 1.125rem;
+          line-height: 1.75;
+          padding: 1.5rem;
+        }
+        .ql-editor h1 {
+          font-size: 2.5rem;
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+        }
+        .ql-editor h2 {
+          font-size: 2rem;
+          margin-top: 1.75rem;
+          margin-bottom: 0.875rem;
+        }
+        .ql-editor h3 {
+          font-size: 1.75rem;
+          margin-top: 1.5rem;
+          margin-bottom: 0.75rem;
+        }
+        .ql-editor p {
+          margin-bottom: 1.25rem;
+        }
+        .ql-editor pre.ql-syntax {
+          background-color: #1a1a1a;
+          color: #e6e6e6;
+          overflow: visible;
+          padding: 1rem;
+          border-radius: 0.375rem;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+        .ql-editor blockquote {
+          border-left: 4px solid #e5e7eb;
+          padding-left: 1rem;
+          margin: 1.5rem 0;
+          color: #4b5563;
+        }
+        .ql-editor ul, .ql-editor ol {
+          padding-left: 1.5rem;
+          margin-bottom: 1.25rem;
+        }
+        .ql-editor li {
+          margin-bottom: 0.5rem;
+        }
+        .ql-editor img {
+          max-width: 100%;
+          height: auto;
+          margin: 1.5rem 0;
+        }
+        .dark .ql-editor {
+          color: #e5e7eb;
+        }
+        .dark .ql-editor blockquote {
+          border-left-color: #4b5563;
+          color: #9ca3af;
+        }
+        .dark .ql-editor pre.ql-syntax {
+          background-color: #111827;
+        }
+      `}</style>
+
       <div>
         <label htmlFor="title" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Title
@@ -172,51 +262,72 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-          Content
-        </label>
-        <div className="prose dark:prose-invert max-w-none">
-          <ReactQuill
-            theme="snow"
-            value={formData.content}
-            onChange={handleEditorChange}
-            modules={modules}
-            formats={formats}
-            className="bg-white dark:bg-slate-800 rounded-md border border-slate-300 dark:border-slate-600"
-          />
+        <div className="flex items-center justify-between mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Content
+          </label>
+          <button
+            type="button"
+            onClick={toggleHtmlView}
+            className="inline-flex items-center px-2 py-1 text-xs font-medium rounded
+              bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300
+              hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+          >
+            {showHtml ? 'Rich Text' : 'HTML'}
+          </button>
         </div>
+        
+        {showHtml ? (
+          <textarea
+            value={htmlContent}
+            onChange={(e) => {
+              setHtmlContent(e.target.value);
+              handleEditorChange(e.target.value);
+            }}
+            className="mt-1 block w-full rounded-md border border-slate-300 dark:border-slate-600 
+              bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 
+              font-mono text-sm h-[400px]"
+          />
+        ) : (
+          <div className="prose prose-lg dark:prose-invert max-w-none">
+            <CustomEditor
+              value={formData.content}
+              onChange={handleEditorChange}
+            />
+          </div>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Tags
         </label>
-        <div className="mt-1">
+        <div className="mt-1 flex flex-wrap gap-2">
+          {formData.tags.map(tag => (
+            <span
+              key={tag}
+              className="inline-flex items-center px-2 py-1 rounded-md text-sm
+                bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200"
+            >
+              {tag}
+              <button
+                type="button"
+                onClick={() => removeTag(tag)}
+                className="ml-1 hover:text-blue-800 dark:hover:text-blue-100"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </span>
+          ))}
           <input
             type="text"
             value={tagInput}
-            onChange={e => setTagInput(e.target.value)}
+            onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={handleTagInputKeyDown}
-            placeholder="Add tags (press Enter)"
-            className="block w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2"
+            placeholder="Add a tag..."
+            className="flex-1 min-w-[200px] rounded-md border border-slate-300 dark:border-slate-600
+              bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-1"
           />
-          <div className="mt-2 flex flex-wrap gap-2">
-            {formData.tags.map(tag => (
-              <span
-                key={tag}
-                className="inline-flex items-center px-2 py-1 rounded-md bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-sm"
-              >
-                {tag}
-                <button
-                  type="button"
-                  onClick={() => removeTag(tag)}
-                  className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -257,17 +368,23 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
         </select>
       </div>
 
-      <div className="flex justify-end space-x-3 pt-4">
+      <div className="flex justify-end space-x-2">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700"
+          className="px-4 py-2 text-sm font-medium rounded-md
+            bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300
+            border border-slate-300 dark:border-slate-600
+            hover:bg-slate-50 dark:hover:bg-slate-700"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="px-4 py-2 text-sm font-medium rounded-md
+            bg-blue-600 text-white
+            hover:bg-blue-700
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           Save
         </button>

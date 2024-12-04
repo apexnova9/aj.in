@@ -206,69 +206,234 @@ export default function BlogPost() {
                 </div>
               )}
               
-              <div 
-                className="prose dark:prose-invert lg:prose-xl max-w-none mb-12 
-                  [&>h1]:!text-3xl [&>h1]:!font-bold [&>h1]:!mb-6 [&>h1]:!text-slate-900 dark:[&>h1]:!text-white
-                  [&>h2]:!text-2xl [&>h2]:!font-bold [&>h2]:!mb-4 [&>h2]:!text-slate-900 dark:[&>h2]:!text-white
-                  [&>h3]:!text-xl [&>h3]:!font-bold [&>h3]:!mb-4 [&>h3]:!text-slate-900 dark:[&>h3]:!text-white
-                  [&>p]:!text-lg [&>p]:!leading-relaxed [&>p]:!mb-6 [&>p]:!text-slate-700 dark:[&>p]:!text-slate-300
-                  
-                  [&>a]:!text-blue-600 dark:[&>a]:!text-blue-400 [&>a]:!no-underline hover:[&>a]:!underline
-                  [&>strong]:!text-slate-900 dark:[&>strong]:!text-white [&>strong]:!font-bold
-                  
-                  /* Code block styling */
-                  [&_code]:!text-[#D4D4D4] 
-                  [&_code]:!bg-slate-100 dark:[&_code]:!bg-slate-800/50 
-                  [&_code]:!px-1.5 [&_code]:!py-0.5 [&_code]:!rounded-md
-                  [&_code]:!text-[15px] [&_code]:!font-mono
-                  
-                  /* Code block container */
-                  [&>pre]:!p-0 [&>pre]:!rounded-lg [&>pre]:!bg-[#1E1E1E]
-                  [&>pre]:!border [&>pre]:!border-[#313131]
-                  [&>pre]:!shadow-lg
-                  [&>pre]:!p-4 [&>pre]:!rounded-lg [&>pre]:!overflow-x-auto
-                  [&>pre]:!text-[#D4D4D4]
-                  
-                  [&>pre>code]:!text-[14px] [&>pre>code]:!leading-relaxed 
-                  [&>pre>code]:!p-0 [&>pre>code]:!bg-transparent [&>pre>code]:!block
-                  [&>pre>code]:!font-mono [&>pre>code]:!tracking-tight
-                  [&>pre>code]:!text-[#D4D4D4]
-                  
-                  /* Syntax highlighting */
-                  [&_.hljs-keyword]:!text-[#569CD6]
-                  [&_.hljs-built_in]:!text-[#4EC9B0]
-                  [&_.hljs-string]:!text-[#CE9178]
-                  [&_.hljs-comment]:!text-[#6A9955]
-                  [&_.hljs-function]:!text-[#DCDCAA]
-                  [&_.hljs-number]:!text-[#B5CEA8]
-                  [&_.hljs-operator]:!text-[#D4D4D4]
-                  [&_.hljs-class]:!text-[#4EC9B0]
-                  [&_.hljs-variable]:!text-[#9CDCFE]
-                  [&_.hljs-params]:!text-[#9CDCFE]
-                  [&_.hljs-property]:!text-[#9CDCFE]
-                  [&_.hljs-punctuation]:!text-[#D4D4D4]
-                  [&_.hljs-tag]:!text-[#569CD6]
-                  [&_.hljs-attr]:!text-[#9CDCFE]
-                  [&_.hljs-title]:!text-[#4EC9B0]
-                  
-                  [&>img]:!rounded-lg [&>img]:!shadow-lg [&>img]:!my-8
-                  
-                  [&>blockquote]:!border-l-4 [&>blockquote]:!border-blue-500 
-                  [&>blockquote]:!bg-slate-50 dark:[&>blockquote]:!bg-slate-800/50 
-                  [&>blockquote]:!px-6 [&>blockquote]:!py-4 [&>blockquote]:!my-8
-                  [&>blockquote>p]:!mb-0 [&>blockquote>p]:!text-slate-700 dark:[&>blockquote>p]:!text-slate-300
-                  
-                  [&>ul]:!list-disc [&>ul]:!pl-6 [&>ul]:!my-6
-                  [&>ol]:!list-decimal [&>ol]:!pl-6 [&>ol]:!my-6
-                  [&>li]:!text-lg [&>li]:!leading-relaxed [&>li]:!mb-2 [&>li]:!text-slate-700 dark:[&>li]:!text-slate-300
-                  
-                  [&>hr]:!my-8 [&>hr]:!border-slate-200 dark:[&>hr]:!border-slate-700
-                  
-                  [&>table]:!w-full [&>table]:!my-8 [&>table]:!border-collapse
-                  [&>table>thead>tr>th]:!p-2 [&>table>thead>tr>th]:!border [&>table>thead>tr>th]:!border-slate-300 dark:[&>table>thead>tr>th]:!border-slate-700
-                  [&>table>tbody>tr>td]:!p-2 [&>table>tbody>tr>td]:!border [&>table>tbody>tr>td]:!border-slate-300 dark:[&>table>tbody>tr>td]:!border-slate-700"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
+              <style jsx global>{`
+                .blog-content {
+                  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                  font-size: 1.125rem;
+                  line-height: 1.75;
+                  color: #1a1a1a;
+                }
+
+                .dark .blog-content {
+                  color: #e5e7eb;
+                }
+
+                .blog-content h1 {
+                  font-size: 2.5rem;
+                  font-weight: 700;
+                  margin: 2.5rem 0 1.5rem;
+                  line-height: 1.2;
+                }
+
+                .blog-content h2 {
+                  font-size: 2rem;
+                  font-weight: 600;
+                  margin: 2rem 0 1.25rem;
+                  line-height: 1.3;
+                }
+
+                .blog-content h3 {
+                  font-size: 1.75rem;
+                  font-weight: 600;
+                  margin: 1.75rem 0 1rem;
+                  line-height: 1.4;
+                }
+
+                .blog-content h4 {
+                  font-size: 1.5rem;
+                  font-weight: 600;
+                  margin: 1.5rem 0 1rem;
+                  line-height: 1.4;
+                }
+
+                .blog-content p {
+                  margin: 1.25rem 0;
+                  font-size: 1.125rem;
+                  line-height: 1.75;
+                }
+
+                .blog-content ul,
+                .blog-content ol {
+                  margin: 1.25rem 0;
+                  padding-left: 1.75rem;
+                }
+
+                .blog-content ul {
+                  list-style-type: disc;
+                }
+
+                .blog-content ol {
+                  list-style-type: decimal;
+                }
+
+                .blog-content li {
+                  margin: 0.5rem 0;
+                  font-size: 1.125rem;
+                  line-height: 1.75;
+                  padding-left: 0.5rem;
+                }
+
+                .blog-content li > ul,
+                .blog-content li > ol {
+                  margin: 0.5rem 0;
+                }
+
+                .blog-content blockquote {
+                  border-left: 4px solid #3b82f6;
+                  margin: 1.5rem 0;
+                  padding: 0.5rem 0 0.5rem 1.5rem;
+                  font-style: italic;
+                  background-color: #f8fafc;
+                  border-radius: 0.25rem;
+                }
+
+                .dark .blog-content blockquote {
+                  background-color: #1e293b;
+                  border-left-color: #60a5fa;
+                }
+
+                .blog-content pre {
+                  background-color: #1e293b;
+                  color: #e2e8f0;
+                  padding: 1.25rem;
+                  border-radius: 0.5rem;
+                  overflow-x: auto;
+                  margin: 1.5rem 0;
+                  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                  font-size: 0.875rem;
+                  line-height: 1.7;
+                }
+
+                .blog-content pre code {
+                  color: inherit;
+                  background-color: transparent;
+                  padding: 0;
+                  font-size: inherit;
+                }
+
+                .blog-content .hljs-keyword {
+                  color: #569CD6;
+                }
+                .blog-content .hljs-built_in {
+                  color: #4EC9B0;
+                }
+                .blog-content .hljs-string {
+                  color: #CE9178;
+                }
+                .blog-content .hljs-comment {
+                  color: #6A9955;
+                }
+                .blog-content .hljs-function {
+                  color: #DCDCAA;
+                }
+                .blog-content .hljs-number {
+                  color: #B5CEA8;
+                }
+                .blog-content .hljs-class {
+                  color: #4EC9B0;
+                }
+                .blog-content .hljs-variable {
+                  color: #9CDCFE;
+                }
+                .blog-content .hljs-params {
+                  color: #9CDCFE;
+                }
+                .blog-content .hljs-property {
+                  color: #9CDCFE;
+                }
+                .blog-content .hljs-punctuation {
+                  color: #D4D4D4;
+                }
+                .blog-content .hljs-tag {
+                  color: #569CD6;
+                }
+                .blog-content .hljs-attr {
+                  color: #9CDCFE;
+                }
+                .blog-content .hljs-title {
+                  color: #4EC9B0;
+                }
+
+                .blog-content a {
+                  color: #3b82f6;
+                  text-decoration: underline;
+                  text-decoration-thickness: 0.125em;
+                  text-underline-offset: 0.15em;
+                  transition: all 0.2s ease;
+                }
+
+                .blog-content a:hover {
+                  color: #2563eb;
+                }
+
+                .dark .blog-content a {
+                  color: #60a5fa;
+                }
+
+                .dark .blog-content a:hover {
+                  color: #93c5fd;
+                }
+
+                .blog-content img {
+                  max-width: 100%;
+                  height: auto;
+                  border-radius: 0.5rem;
+                  margin: 1.5rem 0;
+                }
+
+                .blog-content hr {
+                  margin: 2rem 0;
+                  border: 0;
+                  height: 1px;
+                  background-color: #e2e8f0;
+                }
+
+                .dark .blog-content hr {
+                  background-color: #334155;
+                }
+
+                .blog-content table {
+                  width: 100%;
+                  margin: 1.5rem 0;
+                  border-collapse: collapse;
+                }
+
+                .blog-content th,
+                .blog-content td {
+                  padding: 0.75rem;
+                  border: 1px solid #e2e8f0;
+                  text-align: left;
+                }
+
+                .dark .blog-content th,
+                .dark .blog-content td {
+                  border-color: #334155;
+                }
+
+                .blog-content th {
+                  background-color: #f8fafc;
+                  font-weight: 600;
+                }
+
+                .dark .blog-content th {
+                  background-color: #1e293b;
+                }
+
+                .blog-content mark {
+                  background-color: #fef9c3;
+                  padding: 0.2em 0.4em;
+                  border-radius: 0.25rem;
+                }
+
+                .dark .blog-content mark {
+                  background-color: #854d0e;
+                  color: #fef9c3;
+                }
+              `}</style>
+
+              <article className="blog-content">
+                <div dangerouslySetInnerHTML={{ __html: post.content }} />
+              </article>
 
               {/* Social Share Section */}
               <div className="border-t border-slate-200 dark:border-slate-700 pt-8 mb-8">
@@ -386,26 +551,17 @@ export default function BlogPost() {
                       >
                         <div className="aspect-video mb-4 overflow-hidden rounded-xl relative">
                           {relatedPost.featured_image ? (
-                            <>
-                              <img
-                                src={relatedPost.featured_image}
-                                alt={relatedPost.title}
-                                className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-300"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </>
+                            <img
+                              src={relatedPost.featured_image}
+                              alt={relatedPost.title}
+                              className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-300"
+                            />
                           ) : (
-                            <>
-                              <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
-                                <div className="w-12 h-12 mb-2 text-slate-300 dark:text-slate-600">
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
-                                  </svg>
-                                </div>
-                                <span className="text-sm">No cover image</span>
-                              </div>
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </>
+                            <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h1.833L7.084 4.126H5.117z"/>
+                              </svg>
+                            </div>
                           )}
                         </div>
                         
@@ -420,7 +576,7 @@ export default function BlogPost() {
                               </span>
                             ))}
                           </div>
-                          <h3 className="font-semibold text-lg text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                          <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
                             {relatedPost.title}
                           </h3>
                           <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
@@ -532,7 +688,9 @@ export default function BlogPost() {
                           </div>
                         )}
                       </div>
-                      <h4 className="font-medium text-xs text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-2">{post.title}</h4>
+                      <h4 className="font-medium text-xs text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                        {post.title}
+                      </h4>
                       <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                         <time dateTime={post.created_at}>
                           {format(parseISO(post.created_at), 'MMM d, yyyy')}
