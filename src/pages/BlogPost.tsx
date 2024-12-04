@@ -215,7 +215,19 @@ export default function BlogPost() {
                 }
 
                 .dark .blog-content {
-                  color: #e5e7eb;
+                  color: #94a3b8;
+                }
+
+                .dark .blog-content h1,
+                .dark .blog-content h2,
+                .dark .blog-content h3,
+                .dark .blog-content h4 {
+                  color: #cbd5e1;
+                }
+
+                .dark .blog-content p,
+                .dark .blog-content li {
+                  color: #94a3b8;
                 }
 
                 .blog-content h1 {
@@ -691,7 +703,7 @@ export default function BlogPost() {
                       <h4 className="font-medium text-xs text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
                         {post.title}
                       </h4>
-                      <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                      <div className="mt-1 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                         <time dateTime={post.created_at}>
                           {format(parseISO(post.created_at), 'MMM d, yyyy')}
                         </time>

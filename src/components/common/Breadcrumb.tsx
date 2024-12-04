@@ -18,18 +18,18 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
         <li>
           <Link
             to="/"
-            className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+            className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
           >
-            <Home className="h-4 w-4" />
+            <Home className="h-4 w-4 text-blue-500 dark:text-blue-400" />
           </Link>
         </li>
         {items.map((item, index) => (
           <li key={index} className="flex items-center">
-            <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-500" />
+            <ChevronRight className="h-4 w-4 text-blue-500 dark:text-blue-400" />
             {item.path ? (
               <Link
                 to={item.path}
-                className="ml-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+                className="ml-2 text-sm font-medium text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
               >
                 {item.label}
               </Link>

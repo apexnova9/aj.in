@@ -57,7 +57,7 @@ export default function About() {
           <div className="grid gap-12 md:grid-cols-[320px_1fr]">
             <div className="space-y-8">
               <div className="sticky top-28">
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-300 mb-6">
                   Distinguished Engineer
                 </h1>
                 <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
@@ -66,7 +66,7 @@ export default function About() {
                 <div className="space-y-6">
                   <div className="p-6 bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm
                     hover:shadow-lg transition-all duration-300">
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Core Expertise</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-slate-300 mb-4">Core Expertise</h3>
                     <ul className="space-y-3 text-gray-600 dark:text-gray-300">
                       <li>• Java Enterprise Stack</li>
                       <li>• Big Data Processing</li>
@@ -77,7 +77,7 @@ export default function About() {
                   </div>
                   <div className="p-6 bg-white dark:bg-[#022A5E]/90 rounded-xl border border-slate-200/50 dark:border-[#034694]/30 backdrop-blur-sm
                     hover:shadow-lg transition-all duration-300">
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Domains</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-slate-300 mb-4">Domains</h3>
                     <ul className="space-y-3 text-gray-600 dark:text-gray-300">
                       <li>• Finance</li>
                       <li>• E-commerce</li>
@@ -89,7 +89,7 @@ export default function About() {
             </div>
 
             <div className="prose dark:prose-invert max-w-none">
-              <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+              <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-slate-300">
                 Technology Leader & Solution Architect
               </h2>
               
@@ -102,12 +102,12 @@ export default function About() {
                 </p>
 
                 <div className="my-12">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-300 mb-6">
                     Key Areas of Excellence
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100 flex items-center">
+                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-slate-300 flex items-center">
                         <span className="w-2 h-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                         AI & Cloud Innovation
                       </h4>
@@ -116,7 +116,7 @@ export default function About() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100 flex items-center">
+                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-slate-300 flex items-center">
                         <span className="w-2 h-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                         Technical Architecture
                       </h4>
@@ -125,7 +125,7 @@ export default function About() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100 flex items-center">
+                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-slate-300 flex items-center">
                         <span className="w-2 h-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                         Search & Big Data
                       </h4>
@@ -134,7 +134,7 @@ export default function About() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100 flex items-center">
+                      <h4 className="font-semibold mb-2 text-gray-900 dark:text-slate-300 flex items-center">
                         <span className="w-2 h-2 mr-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                         Security & Compliance
                       </h4>
@@ -146,7 +146,7 @@ export default function About() {
                 </div>
 
                 <div className="my-12">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-300 mb-6">
                     Professional Impact
                   </h3>
                   <ul className="space-y-4">
@@ -175,7 +175,7 @@ export default function About() {
                   solve complex business challenges while ensuring sustained growth and operational success.
                 </p>
 
-                <h3 className="text-2xl font-bold mb-8 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                <h3 className="text-2xl font-bold mb-8 text-gray-900 dark:text-slate-300">
                   Technical Expertise
                 </h3>
                 
@@ -194,7 +194,7 @@ export default function About() {
                         >
                           {skill.icon}
                         </div>
-                        <h3 className="text-lg font-semibold ml-3 text-gray-900 dark:text-gray-100">
+                        <h3 className="text-lg font-semibold ml-3 text-gray-900 dark:text-slate-300">
                           {skill.title}
                         </h3>
                       </div>
