@@ -9,7 +9,9 @@ const PORT = 3002;
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://amitjha.in'  // Update this to your production domain
+    : ['http://localhost:3000', 'http://localhost:3002'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -49,7 +51,7 @@ app.use((req, res, next) => {
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));
 
-// Routes
+// API Routes
 app.get('/api/posts', async (req, res) => {
   try {
     console.log('Fetching all posts...');
@@ -109,10 +111,20 @@ app.get('/api/posts/slug/:slug', async (req, res) => {
 // Create new post
 app.post('/api/posts', upload.single('featured_image'), async (req, res) => {
   try {
-    const { title, content, excerpt, status = 'draft', tags = [] } = req.body;
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const { title, content, excerpt, status = 'draft' } = req.body;
+    let tags = [];
     
-    console.log('Creating new post:', { title, slug, status });
+    // Parse tags from the form data
+    try {
+      tags = req.body.tags ? JSON.parse(req.body.tags) : [];
+      console.log('Parsed tags:', tags);
+    } catch (e) {
+      console.error('Error parsing tags:', e);
+      tags = req.body.tags ? req.body.tags.split(',').map(t => t.trim()).filter(t => t) : [];
+    }
+    
+    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    console.log('Creating new post:', { title, slug, status, tags });
     
     const featured_image = req.file ? `/uploads/${req.file.filename}` : null;
     
@@ -138,8 +150,20 @@ app.post('/api/posts', upload.single('featured_image'), async (req, res) => {
       }
     }
     
-    console.log('Post created successfully:', result.lastID);
-    res.status(201).json({ id: result.lastID, slug });
+    // Fetch the created post with tags
+    const createdPost = await db.get(`
+      SELECT p.*, GROUP_CONCAT(t.name) as tags
+      FROM posts p
+      LEFT JOIN post_tags pt ON p.id = pt.post_id
+      LEFT JOIN tags t ON pt.tag_id = t.id
+      WHERE p.id = ?
+      GROUP BY p.id
+    `, [result.lastID]);
+    
+    createdPost.tags = createdPost.tags ? createdPost.tags.split(',') : [];
+    
+    console.log('Post created successfully:', createdPost);
+    res.status(201).json(createdPost);
   } catch (error) {
     console.error('Error creating post:', error);
     res.status(500).json({ error: 'Failed to create post', details: error.message });
@@ -150,32 +174,16 @@ app.post('/api/posts', upload.single('featured_image'), async (req, res) => {
 app.put('/api/posts/:id', upload.single('featured_image'), async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('Received request body:', req.body);
-    
-    // Extract fields from form data
-    const title = req.body.title;
-    const content = req.body.content;
-    const excerpt = req.body.excerpt;
-    const status = req.body.status || 'draft';
+    const { title, content, excerpt, status = 'draft' } = req.body;
     let tags = [];
     
-    // Parse tags if they exist
-    if (req.body.tags) {
-      try {
-        if (typeof req.body.tags === 'string') {
-          tags = JSON.parse(req.body.tags);
-          console.log('Parsed tags from JSON:', tags);
-        } else if (Array.isArray(req.body.tags)) {
-          tags = req.body.tags;
-          console.log('Using array tags:', tags);
-        }
-      } catch (e) {
-        console.error('Error parsing tags:', e);
-        if (typeof req.body.tags === 'string') {
-          tags = req.body.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-          console.log('Parsed tags from comma-separated string:', tags);
-        }
-      }
+    // Parse tags from the form data
+    try {
+      tags = req.body.tags ? JSON.parse(req.body.tags) : [];
+      console.log('Parsed tags:', tags);
+    } catch (e) {
+      console.error('Error parsing tags:', e);
+      tags = req.body.tags ? req.body.tags.split(',').map(t => t.trim()).filter(t => t) : [];
     }
     
     console.log('Processing update with:', { title, content, excerpt, status, tags });
@@ -186,6 +194,7 @@ app.put('/api/posts/:id', upload.single('featured_image'), async (req, res) => {
       return res.status(400).json({ error: 'Title is required' });
     }
     
+    // Update post
     let updateFields = ['title = ?', 'content = ?', 'excerpt = ?', 'status = ?'];
     let params = [title, content, excerpt, status];
     
@@ -196,40 +205,34 @@ app.put('/api/posts/:id', upload.single('featured_image'), async (req, res) => {
     
     params.push(id);
     
-    console.log('Executing update query with params:', params);
-    
-    const result = await db.run(
-      `UPDATE posts SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    await db.run(
+      `UPDATE posts SET ${updateFields.join(', ')} WHERE id = ?`,
       params
     );
     
     // Update tags
-    console.log('Deleting existing tags for post:', id);
+    // First, remove all existing tags for this post
     await db.run('DELETE FROM post_tags WHERE post_id = ?', [id]);
     
-    for (const tagName of tags) {
-      // Skip empty tags
-      if (!tagName.trim()) {
-        console.log('Skipping empty tag');
-        continue;
+    // Then add new tags
+    if (tags.length > 0) {
+      for (const tagName of tags) {
+        // Insert or get tag
+        let tag = await db.get('SELECT id FROM tags WHERE name = ?', [tagName]);
+        if (!tag) {
+          const tagResult = await db.run('INSERT INTO tags (name) VALUES (?)', [tagName]);
+          tag = { id: tagResult.lastID };
+        }
+        
+        // Create post-tag relationship
+        await db.run(
+          'INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)',
+          [id, tag.id]
+        );
       }
-      
-      console.log('Processing tag:', tagName);
-      let tag = await db.get('SELECT id FROM tags WHERE name = ?', [tagName]);
-      if (!tag) {
-        console.log('Creating new tag:', tagName);
-        const tagResult = await db.run('INSERT INTO tags (name) VALUES (?)', [tagName]);
-        tag = { id: tagResult.lastID };
-      }
-      
-      console.log('Adding tag to post:', tagName, tag.id);
-      await db.run(
-        'INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)',
-        [id, tag.id]
-      );
     }
     
-    // Get the updated post with tags
+    // Fetch the updated post with tags
     const updatedPost = await db.get(`
       SELECT p.*, GROUP_CONCAT(t.name) as tags
       FROM posts p
@@ -238,6 +241,8 @@ app.put('/api/posts/:id', upload.single('featured_image'), async (req, res) => {
       WHERE p.id = ?
       GROUP BY p.id
     `, [id]);
+    
+    updatedPost.tags = updatedPost.tags ? updatedPost.tags.split(',') : [];
     
     console.log('Post updated successfully:', updatedPost);
     res.json(updatedPost);
@@ -269,6 +274,18 @@ app.delete('/api/posts/:id', async (req, res) => {
     console.error('Error deleting post:', error);
     res.status(500).json({ error: 'Failed to delete post', details: error.message });
   }
+});
+
+// Serve static frontend files from public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Handle frontend routes (should be after all API routes)
+app.get('*', (req, res) => {
+  // Don't handle API routes here
+  if (req.url.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Error handling middleware

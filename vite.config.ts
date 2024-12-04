@@ -16,9 +16,10 @@ export default defineConfig({
     host: true,
   },
   build: {
-    outDir: 'dist',
+    outDir: './server/public',
     sourcemap: true,
     minify: 'terser',
+    emptyOutDir: true,
     chunkSizeWarningLimit: 1000,
   },
 });
