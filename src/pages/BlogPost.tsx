@@ -167,12 +167,14 @@ export default function BlogPost() {
               {post.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-6">
                   {post.tags.map(tag => (
-                    <span
+                    <Link
                       key={tag}
-                      className="px-3 py-1 text-sm rounded-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-100 transition-colors"
+                      to={`/blog?tag=${encodeURIComponent(tag)}`}
+                      className="px-3 py-1 text-sm rounded-full bg-blue-500/20 hover:bg-blue-500/30 
+                        text-blue-100 hover:text-white transition-colors cursor-pointer"
                     >
-                      {tag}
-                    </span>
+                      #{tag}
+                    </Link>
                   ))}
                 </div>
               )}
@@ -447,6 +449,25 @@ export default function BlogPost() {
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
               </article>
 
+              {/* Tags Section */}
+              {post.tags.length > 0 && (
+                <div className="border-t border-slate-200 dark:border-slate-700 pt-8 mb-8">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map(tag => (
+                      <Link
+                        key={tag}
+                        to={`/blog?tag=${encodeURIComponent(tag)}`}
+                        className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 
+                          text-slate-700 dark:text-slate-300 rounded-lg transition-colors text-sm"
+                      >
+                        #{tag}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Social Share Section */}
               <div className="border-t border-slate-200 dark:border-slate-700 pt-8 mb-8">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Share this post</h3>
@@ -485,7 +506,7 @@ export default function BlogPost() {
                     className="inline-flex items-center gap-2 px-4 py-2 bg-[#1877F2] hover:bg-[#0C63D4] text-white rounded-lg transition-colors"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                     <span>Share on Facebook</span>
                   </a>
