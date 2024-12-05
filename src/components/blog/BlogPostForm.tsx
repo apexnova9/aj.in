@@ -6,6 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
 import { categoryService } from '../../services/categoryService';
+import { getImageUrl } from '../../utils/imageUtils';
 
 // Quill syntax module - only register if not already registered
 const Quill = ReactQuill.Quill;
@@ -110,13 +111,26 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
   const [htmlContent, setHtmlContent] = useState(initialData?.content || '');
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  // Fetch categories
+  // Fetch categories and build tree
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const fetchedCategories = await categoryService.getCategories();
-        setCategories(fetchedCategories);
+        const treeCategories = categoryService.buildCategoryTree(fetchedCategories);
+        setCategories(treeCategories);
+
+        // If we have initialData with category_ids, ensure they are numbers
+        if (initialData?.category_ids) {
+          const numericCategoryIds = initialData.category_ids.map(id => 
+            typeof id === 'string' ? parseInt(id, 10) : id
+          );
+          setFormData(prev => ({
+            ...prev,
+            category_ids: numericCategoryIds
+          }));
+        }
       } catch (error) {
         console.error('Error fetching categories:', error);
       } finally {
@@ -125,7 +139,20 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
     };
 
     fetchCategories();
-  }, []);
+  }, [initialData]);
+
+  // Effect to handle initial category_ids
+  useEffect(() => {
+    if (initialData?.category_ids) {
+      const numericCategoryIds = initialData.category_ids.map(id => 
+        typeof id === 'string' ? parseInt(id, 10) : id
+      );
+      setFormData(prev => ({
+        ...prev,
+        category_ids: numericCategoryIds
+      }));
+    }
+  }, [initialData?.category_ids]);
 
   // Render category options recursively
   const renderCategoryOptions = (categories: Category[], level = 0) => {
@@ -134,8 +161,8 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
       return (
         <React.Fragment key={category.id}>
           <option value={category.id}>{prefix + category.name}</option>
-          {(category as any).children?.length > 0 && 
-            renderCategoryOptions((category as any).children, level + 1)}
+          {category.children?.length > 0 && 
+            renderCategoryOptions(category.children, level + 1)}
         </React.Fragment>
       );
     });
@@ -200,9 +227,16 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    // Ensure category_ids are properly formatted as numbers
+    const formattedData = {
+      ...formData,
+      category_ids: formData.category_ids.map(id => 
+        typeof id === 'string' ? parseInt(id, 10) : id
+      )
+    };
+    onSubmit(formattedData);
   };
 
   const toggleHtmlView = () => {
@@ -215,13 +249,20 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Handle image upload logic here
-      // For now, we'll just use a placeholder
+      setPreviewUrl(URL.createObjectURL(file));
       setFormData(prev => ({
         ...prev,
         featured_image: file
       }));
     }
+  };
+
+  const handleRemoveImage = () => {
+    setPreviewUrl(null);
+    setFormData(prev => ({
+      ...prev,
+      featured_image: null
+    }));
   };
 
   return (
@@ -390,32 +431,43 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+        <label htmlFor="category_ids" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Categories
         </label>
-        {isLoadingCategories ? (
-          <div className="animate-pulse h-10 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
-        ) : (
-          <select
-            multiple
-            value={formData.category_ids.map(String)}
-            onChange={(e) => {
-              const selectedOptions = Array.from(e.target.selectedOptions);
-              const selectedIds = selectedOptions.map(option => Number(option.value));
-              setFormData(prev => ({ ...prev, category_ids: selectedIds }));
-            }}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg 
-              focus:outline-none focus:ring-2 focus:ring-blue-500 
-              dark:bg-slate-800 dark:border-slate-600 dark:text-white
-              min-h-[120px]"
-          >
-            <option value="">Select categories (multiple)</option>
-            {renderCategoryOptions(categoryService.buildCategoryTree(categories))}
-          </select>
-        )}
+        <select
+          multiple
+          id="category_ids"
+          name="category_ids"
+          value={formData.category_ids.map(id => id.toString())}
+          onChange={(e) => {
+            const selectedOptions = Array.from(e.target.selectedOptions, option => Number(option.value));
+            console.log('Selected categories:', selectedOptions);
+            setFormData(prev => ({
+              ...prev,
+              category_ids: selectedOptions
+            }));
+          }}
+          className="mt-1 block w-full rounded-md border border-slate-300 dark:border-slate-600 
+            bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 
+            focus:border-blue-500 focus:ring-blue-500 focus:outline-none min-h-[240px]"
+          size={10}
+        >
+          {isLoadingCategories ? (
+            <option disabled>Loading categories...</option>
+          ) : categories.length === 0 ? (
+            <option disabled>No categories available</option>
+          ) : (
+            renderCategoryOptions(categories)
+          )}
+        </select>
         <p className="text-sm text-slate-500 dark:text-slate-400">
-          Hold Ctrl (Windows) or Command (Mac) to select multiple categories
+          Hold Ctrl (Windows) or Cmd (Mac) to select multiple categories
         </p>
+        {formData.category_ids.length > 0 && (
+          <p className="text-sm text-blue-600 dark:text-blue-400">
+            Selected categories: {formData.category_ids.length}
+          </p>
+        )}
       </div>
 
       <div>
@@ -428,13 +480,36 @@ export function BlogPostForm({ initialData, onSubmit, onCancel }: BlogPostFormPr
           onChange={handleImageUpload}
           className="mt-1 block w-full text-sm text-slate-700 dark:text-slate-300"
         />
-        {formData.featured_image && (
-          <div className="mt-2">
+        {previewUrl && (
+          <div className="mt-2 relative w-48 h-32 rounded-lg overflow-hidden">
             <img
-              src={formData.featured_image instanceof File ? URL.createObjectURL(formData.featured_image) : formData.featured_image}
-              alt="Featured"
-              className="max-h-40 rounded-md"
+              src={previewUrl}
+              alt="Featured image preview"
+              className="w-full h-full object-cover"
             />
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
+        {!previewUrl && initialData?.featured_image && (
+          <div className="mt-2 relative w-48 h-32 rounded-lg overflow-hidden">
+            <img
+              src={getImageUrl(initialData.featured_image)}
+              alt="Current featured image"
+              className="w-full h-full object-cover"
+            />
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+            >
+              <X size={16} />
+            </button>
           </div>
         )}
       </div>

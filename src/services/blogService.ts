@@ -22,7 +22,14 @@ export const blogService = {
       if (!response.ok) {
         throw new Error('Failed to fetch post');
       }
-      return response.json();
+      const post = await response.json();
+      
+      // Ensure category_ids is properly formatted
+      if (post.categories) {
+        post.category_ids = post.categories.map((cat: Category) => cat.id);
+      }
+      
+      return post;
     } catch (error) {
       console.error('Error in getPost:', error);
       throw error;
@@ -41,9 +48,15 @@ export const blogService = {
         throw new Error(text || 'Failed to fetch post');
       }
       
-      const data = await response.json();
-      console.log('Fetched post:', data);
-      return data;
+      const post = await response.json();
+      
+      // Ensure category_ids is properly formatted
+      if (post.categories) {
+        post.category_ids = post.categories.map((cat: Category) => cat.id);
+      }
+      
+      console.log('Fetched post:', post);
+      return post;
     } catch (error) {
       console.error('Error in getPostBySlug:', error);
       throw error;
@@ -53,15 +66,30 @@ export const blogService = {
   async createPost(data: BlogPostInput): Promise<BlogPost> {
     try {
       const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (key === 'featured_image' && value instanceof File) {
-          formData.append(key, value);
-        } else if (key === 'tags' && Array.isArray(value)) {
-          formData.append(key, JSON.stringify(value));
-        } else if (value !== null && value !== undefined) {
-          formData.append(key, String(value));
-        }
-      });
+      
+      // Add all fields to FormData
+      formData.append('title', data.title);
+      formData.append('content', data.content || '');
+      formData.append('excerpt', data.excerpt || '');
+      formData.append('status', data.status || 'draft');
+      
+      // Handle featured image
+      if (data.featured_image instanceof File) {
+        formData.append('featured_image', data.featured_image);
+      }
+      
+      // Handle tags - ensure it's sent as a JSON string array
+      if (Array.isArray(data.tags)) {
+        formData.append('tags', JSON.stringify(data.tags));
+      }
+      
+      // Handle category_ids - ensure it's sent as a JSON string array of numbers
+      if (Array.isArray(data.category_ids)) {
+        const categoryIds = data.category_ids.map(id => 
+          typeof id === 'string' ? parseInt(id, 10) : id
+        );
+        formData.append('category_ids', JSON.stringify(categoryIds));
+      }
 
       const response = await fetch(`${API_URL}/posts`, {
         method: 'POST',
@@ -69,7 +97,8 @@ export const blogService = {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create post');
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to create post');
       }
       return response.json();
     } catch (error) {
@@ -89,39 +118,33 @@ export const blogService = {
       formData.append('excerpt', data.excerpt || '');
       formData.append('status', data.status || 'draft');
       
-      // Handle tags - ensure it's sent as a JSON string array
-      if (Array.isArray(data.tags)) {
-        formData.append('tags', JSON.stringify(data.tags));
-      }
-      
-      // Handle category_ids - ensure it's sent as a JSON string array
-      if (Array.isArray(data.category_ids)) {
-        formData.append('category_ids', JSON.stringify(data.category_ids));
-      }
-      
       // Handle featured image
       if (data.featured_image instanceof File) {
         formData.append('featured_image', data.featured_image);
       }
       
-      console.log('Sending form data:', {
-        title: data.title,
-        excerpt: data.excerpt,
-        tags: data.tags,
-        category_ids: data.category_ids,
-        status: data.status
-      });
+      // Handle tags - ensure it's sent as a JSON string array
+      if (Array.isArray(data.tags)) {
+        formData.append('tags', JSON.stringify(data.tags));
+      }
       
+      // Handle category_ids - ensure it's sent as a JSON string array of numbers
+      if (Array.isArray(data.category_ids)) {
+        const categoryIds = data.category_ids.map(id => 
+          typeof id === 'string' ? parseInt(id, 10) : id
+        );
+        formData.append('category_ids', JSON.stringify(categoryIds));
+      }
+
       const response = await fetch(`${API_URL}/posts/${id}`, {
         method: 'PUT',
         body: formData,
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update post');
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to update post');
       }
-      
       return response.json();
     } catch (error) {
       console.error('Error in updatePost:', error);

@@ -7,6 +7,7 @@ import { categoryService } from '../services/categoryService';
 import { Search, Tag } from 'lucide-react';
 import { Breadcrumb } from '../components/common/Breadcrumb';
 import CategoryFilter from '../components/blog/CategoryFilter';
+import { getImageUrl } from '../utils/imageUtils';
 
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -237,7 +238,19 @@ export default function Blog() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {filteredPosts.map((post) => (
-                  <BlogCard key={post.id} post={post} />
+                  <div key={post.id} className="bg-white dark:bg-[#022A5E]/90 rounded-lg shadow-md">
+                    {post.featured_image && (
+                      <div className="aspect-video mb-4 overflow-hidden rounded-lg">
+                        <img
+                          src={getImageUrl(post.featured_image)}
+                          alt={post.title}
+                          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+                    <BlogCard post={post} />
+                  </div>
                 ))}
               </div>
             )}
