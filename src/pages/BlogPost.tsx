@@ -8,6 +8,7 @@ import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Breadcrumb } from '../components/common/Breadcrumb';
 import { Calendar, Tag, FolderTree } from 'lucide-react';
 import { categoryService } from '../services/categoryService';
+import '../styles/blog.css';
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -27,18 +28,27 @@ export default function BlogPost() {
       if (!slug) return;
       try {
         setLoading(true);
-        const [fetchedPost, fetchedPosts, categoriesData] = await Promise.all([
+        const [fetchedPost, postsData, categoriesData] = await Promise.all([
           blogService.getPostBySlug(slug),
-          blogService.getPosts(),
+          blogService.getPosts(1, 100), // Get first 100 posts for navigation
           categoryService.getCategories()
         ]);
-        
+
+        if (!postsData?.posts) {
+          throw new Error('Invalid response format: posts array is missing');
+        }
+
+        if (!fetchedPost) {
+          throw new Error('Post not found');
+        }
+
         setPost(fetchedPost);
-        setAllPosts(fetchedPosts);
+        setAllPosts(postsData.posts);
         setCategories(categoriesData);
 
         // Find adjacent posts
-        const publishedPosts = fetchedPosts.filter(p => p.status === 'published');
+        const publishedPosts = postsData.posts
+          .filter(p => p?.status === 'published');
         const currentIndex = publishedPosts.findIndex(p => p.slug === slug);
         
         setAdjacentPosts({
@@ -47,27 +57,31 @@ export default function BlogPost() {
         });
 
         // Find related posts based on tags with relevance scoring
-        const related = publishedPosts
-          .filter(p => p.slug !== slug) // Exclude current post
-          .map(post => {
-            // Calculate relevance score
-            const sharedTags = post.tags.filter(tag => fetchedPost.tags.includes(tag));
-            const score = {
-              tagMatch: sharedTags.length / Math.max(post.tags.length, fetchedPost.tags.length), // Tag similarity ratio
-              recency: (new Date(post.created_at)).getTime(), // More recent posts get higher score
-            };
-            
-            return {
-              post,
-              relevanceScore: score.tagMatch * 0.7 + // 70% weight to tag matches
-                             (score.recency / Date.now()) * 0.3 // 30% weight to recency
-            };
-          })
-          .sort((a, b) => b.relevanceScore - a.relevanceScore) // Sort by relevance score
-          .slice(0, 3) // Take top 3
-          .map(({ post }) => post); // Extract just the posts
+        if (fetchedPost?.tags && Array.isArray(fetchedPost.tags)) {
+          const related = publishedPosts
+            .filter(p => p.slug !== slug && p?.tags && Array.isArray(p.tags)) // Exclude current post and ensure tags exist
+            .map(post => {
+              // Calculate relevance score
+              const sharedTags = post.tags.filter(tag => 
+                fetchedPost.tags.includes(tag)
+              );
+              const score = {
+                tagMatch: sharedTags.length / Math.max(post.tags.length, fetchedPost.tags.length), // Tag similarity ratio
+                recency: (new Date(post.created_at)).getTime(), // More recent posts get higher score
+              };
+              
+              return {
+                post,
+                relevanceScore: score.tagMatch * 0.7 + // 70% weight to tag matches
+                               (score.recency / Date.now()) * 0.3 // 30% weight to recency
+              };
+            })
+            .sort((a, b) => b.relevanceScore - a.relevanceScore) // Sort by relevance score
+            .slice(0, 3) // Take top 3
+            .map(({ post }) => post); // Extract just the posts
 
-        setRelatedPosts(related);
+          setRelatedPosts(related);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load post');
       } finally {
@@ -242,243 +256,6 @@ export default function BlogPost() {
                 </div>
               )}
               
-              <style jsx global>{`
-                .blog-content {
-                  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-                  font-size: 1.125rem;
-                  line-height: 1.75;
-                  color: #1a1a1a;
-                }
-
-                .dark .blog-content {
-                  color: #94a3b8;
-                }
-
-                .dark .blog-content h1,
-                .dark .blog-content h2,
-                .dark .blog-content h3,
-                .dark .blog-content h4 {
-                  color: #cbd5e1;
-                }
-
-                .dark .blog-content p,
-                .dark .blog-content li {
-                  color: #94a3b8;
-                }
-
-                .blog-content h1 {
-                  font-size: 2.5rem;
-                  font-weight: 700;
-                  margin: 2.5rem 0 1.5rem;
-                  line-height: 1.2;
-                }
-
-                .blog-content h2 {
-                  font-size: 2rem;
-                  font-weight: 600;
-                  margin: 2rem 0 1.25rem;
-                  line-height: 1.3;
-                }
-
-                .blog-content h3 {
-                  font-size: 1.75rem;
-                  font-weight: 600;
-                  margin: 1.75rem 0 1rem;
-                  line-height: 1.4;
-                }
-
-                .blog-content h4 {
-                  font-size: 1.5rem;
-                  font-weight: 600;
-                  margin: 1.5rem 0 1rem;
-                  line-height: 1.4;
-                }
-
-                .blog-content p {
-                  margin: 1.25rem 0;
-                  font-size: 1.125rem;
-                  line-height: 1.75;
-                }
-
-                .blog-content ul,
-                .blog-content ol {
-                  margin: 1.25rem 0;
-                  padding-left: 1.75rem;
-                }
-
-                .blog-content ul {
-                  list-style-type: disc;
-                }
-
-                .blog-content ol {
-                  list-style-type: decimal;
-                }
-
-                .blog-content li {
-                  margin: 0.5rem 0;
-                  font-size: 1.125rem;
-                  line-height: 1.75;
-                  padding-left: 0.5rem;
-                }
-
-                .blog-content li > ul,
-                .blog-content li > ol {
-                  margin: 0.5rem 0;
-                }
-
-                .blog-content blockquote {
-                  border-left: 4px solid #3b82f6;
-                  margin: 1.5rem 0;
-                  padding: 0.5rem 0 0.5rem 1.5rem;
-                  font-style: italic;
-                  background-color: #f8fafc;
-                  border-radius: 0.25rem;
-                }
-
-                .dark .blog-content blockquote {
-                  background-color: #1e293b;
-                  border-left-color: #60a5fa;
-                }
-
-                .blog-content pre {
-                  background-color: #1e293b;
-                  color: #e2e8f0;
-                  padding: 1.25rem;
-                  border-radius: 0.5rem;
-                  overflow-x: auto;
-                  margin: 1.5rem 0;
-                  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-                  font-size: 0.875rem;
-                  line-height: 1.7;
-                }
-
-                .blog-content pre code {
-                  color: inherit;
-                  background-color: transparent;
-                  padding: 0;
-                  font-size: inherit;
-                }
-
-                .blog-content .hljs-keyword {
-                  color: #569CD6;
-                }
-                .blog-content .hljs-built_in {
-                  color: #4EC9B0;
-                }
-                .blog-content .hljs-string {
-                  color: #CE9178;
-                }
-                .blog-content .hljs-comment {
-                  color: #6A9955;
-                }
-                .blog-content .hljs-function {
-                  color: #DCDCAA;
-                }
-                .blog-content .hljs-number {
-                  color: #B5CEA8;
-                }
-                .blog-content .hljs-class {
-                  color: #4EC9B0;
-                }
-                .blog-content .hljs-variable {
-                  color: #9CDCFE;
-                }
-                .blog-content .hljs-params {
-                  color: #9CDCFE;
-                }
-                .blog-content .hljs-property {
-                  color: #9CDCFE;
-                }
-                .blog-content .hljs-punctuation {
-                  color: #D4D4D4;
-                }
-                .blog-content .hljs-tag {
-                  color: #569CD6;
-                }
-                .blog-content .hljs-attr {
-                  color: #9CDCFE;
-                }
-                .blog-content .hljs-title {
-                  color: #4EC9B0;
-                }
-
-                .blog-content a {
-                  color: #3b82f6;
-                  text-decoration: underline;
-                  text-decoration-thickness: 0.125em;
-                  text-underline-offset: 0.15em;
-                  transition: all 0.2s ease;
-                }
-
-                .blog-content a:hover {
-                  color: #2563eb;
-                }
-
-                .dark .blog-content a {
-                  color: #60a5fa;
-                }
-
-                .dark .blog-content a:hover {
-                  color: #93c5fd;
-                }
-
-                .blog-content img {
-                  max-width: 100%;
-                  height: auto;
-                  border-radius: 0.5rem;
-                  margin: 1.5rem 0;
-                }
-
-                .blog-content hr {
-                  margin: 2rem 0;
-                  border: 0;
-                  height: 1px;
-                  background-color: #e2e8f0;
-                }
-
-                .dark .blog-content hr {
-                  background-color: #334155;
-                }
-
-                .blog-content table {
-                  width: 100%;
-                  margin: 1.5rem 0;
-                  border-collapse: collapse;
-                }
-
-                .blog-content th,
-                .blog-content td {
-                  padding: 0.75rem;
-                  border: 1px solid #e2e8f0;
-                  text-align: left;
-                }
-
-                .dark .blog-content th,
-                .dark .blog-content td {
-                  border-color: #334155;
-                }
-
-                .blog-content th {
-                  background-color: #f8fafc;
-                  font-weight: 600;
-                }
-
-                .dark .blog-content th {
-                  background-color: #1e293b;
-                }
-
-                .blog-content mark {
-                  background-color: #fef9c3;
-                  padding: 0.2em 0.4em;
-                  border-radius: 0.25rem;
-                }
-
-                .dark .blog-content mark {
-                  background-color: #854d0e;
-                  color: #fef9c3;
-                }
-              `}</style>
-
               <article className="blog-content">
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
               </article>
@@ -782,6 +559,6 @@ export default function BlogPost() {
           </div>
         </div>
       </div>
-    </>
+    </> 
   );
 }

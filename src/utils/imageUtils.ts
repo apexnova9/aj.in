@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3002';
+const BASE_URL = import.meta.env.BASE_URL;
 
 export const getImageUrl = (imagePath: string | null): string => {
   if (!imagePath) return '';
@@ -10,9 +10,9 @@ export const getImageUrl = (imagePath: string | null): string => {
 
   // If the path starts with /uploads, append it to API_URL
   if (imagePath.startsWith('/uploads/')) {
-    return `${API_URL}${imagePath}`;
+    return `${BASE_URL}${imagePath}`;
   }
 
   // If the path doesn't start with /uploads, add it
-  return `${API_URL}/uploads/${imagePath}`;
+  return `${BASE_URL}/uploads/${imagePath}`;
 };

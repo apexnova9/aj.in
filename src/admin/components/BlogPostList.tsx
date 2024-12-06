@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BlogPost } from '../../types/blog';
 import { Edit2, Trash2, Eye } from 'lucide-react';
 
@@ -11,6 +11,40 @@ interface BlogPostListProps {
 }
 
 export function BlogPostList({ posts, onEdit, onDelete, onView, disabled = false }: BlogPostListProps) {
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  const truncateExcerpt = (text: string, maxLength: number = 100) => {
+    if (!text || text.length <= maxLength) return text;
+    const truncated = text.substring(0, text.lastIndexOf(' ', maxLength));
+    return `${truncated}...`;
+  };
+
+  const handleAction = async (actionType: 'edit' | 'delete' | 'view', post: BlogPost) => {
+    if (disabled || loadingStates[`${actionType}-${post.id}`]) return;
+    
+    setLoadingStates(prev => ({ ...prev, [`${actionType}-${post.id}`]: true }));
+    try {
+      switch (actionType) {
+        case 'edit':
+          await onEdit(post);
+          break;
+        case 'delete':
+          await onDelete(post);
+          break;
+        case 'view':
+          await onView(post);
+          break;
+      }
+    } finally {
+      setLoadingStates(prev => ({ ...prev, [`${actionType}-${post.id}`]: false }));
+    }
+  };
+
+  const handleImageError = (postId: number) => {
+    setFailedImages(prev => new Set(prev).add(postId.toString()));
+  };
+
   if (posts.length === 0) {
     return (
       <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-lg shadow">
@@ -78,11 +112,12 @@ export function BlogPostList({ posts, onEdit, onDelete, onView, disabled = false
             >
               <td className="px-6 py-4">
                 <div className="flex items-center">
-                  {post.featured_image && (
+                  {post.featured_image && !failedImages.has(post.id.toString()) && (
                     <img 
                       src={post.featured_image} 
                       alt={post.title}
                       className="h-10 w-10 rounded-lg object-cover mr-3"
+                      onError={() => handleImageError(post.id)}
                     />
                   )}
                   <div>
@@ -90,7 +125,7 @@ export function BlogPostList({ posts, onEdit, onDelete, onView, disabled = false
                       {post.title}
                     </div>
                     <div className="text-sm text-slate-500 dark:text-slate-400">
-                      {post.excerpt?.substring(0, 100)}...
+                      {truncateExcerpt(post.excerpt)}
                     </div>
                     {post.tags && post.tags.length > 0 && (
                       <div className="mt-1 flex flex-wrap gap-1">
@@ -123,28 +158,28 @@ export function BlogPostList({ posts, onEdit, onDelete, onView, disabled = false
               <td className="px-6 py-4 text-right text-sm font-medium">
                 <div className="flex justify-end space-x-3">
                   <button
-                    onClick={() => onView(post)}
-                    disabled={disabled}
+                    onClick={() => handleAction('view', post)}
+                    disabled={disabled || loadingStates[`view-${post.id}`]}
                     className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="View post"
                   >
-                    <Eye className="h-5 w-5" />
+                    <Eye className={`h-5 w-5 ${loadingStates[`view-${post.id}`] ? 'animate-pulse' : ''}`} />
                   </button>
                   <button
-                    onClick={() => onEdit(post)}
-                    disabled={disabled}
+                    onClick={() => handleAction('edit', post)}
+                    disabled={disabled || loadingStates[`edit-${post.id}`]}
                     className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Edit post"
                   >
-                    <Edit2 className="h-5 w-5" />
+                    <Edit2 className={`h-5 w-5 ${loadingStates[`edit-${post.id}`] ? 'animate-pulse' : ''}`} />
                   </button>
                   <button
-                    onClick={() => onDelete(post)}
-                    disabled={disabled}
+                    onClick={() => handleAction('delete', post)}
+                    disabled={disabled || loadingStates[`delete-${post.id}`]}
                     className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Delete post"
                   >
-                    <Trash2 className="h-5 w-5" />
+                    <Trash2 className={`h-5 w-5 ${loadingStates[`delete-${post.id}`] ? 'animate-pulse' : ''}`} />
                   </button>
                 </div>
               </td>

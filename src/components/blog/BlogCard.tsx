@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { BlogPost } from '../../types/blog';
 import { Tag, Calendar, FolderTree } from 'lucide-react';
+import { getImageUrl } from '../../utils/imageUtils';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -17,22 +18,25 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
   };
 
   return (
-    <article className="group bg-white dark:bg-slate-800/50 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden border border-slate-200/50 dark:border-slate-700/50">
+    <article className="group bg-white dark:bg-[#022A5E]/90 rounded-xl shadow-sm hover:shadow-md 
+      transition-all border border-slate-200/50 dark:border-[#034694]/30 overflow-hidden flex flex-col h-full">
+      {/* Featured Image */}
       {post.featured_image && (
-        <Link to={`/blog/${post.slug}`} className="block aspect-[16/9] overflow-hidden">
+        <Link to={`/blog/${post.slug}`} className="block aspect-video overflow-hidden">
           <img
-            src={post.featured_image}
+            src={getImageUrl(post.featured_image)}
             alt={post.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
           />
         </Link>
       )}
-      
-      <div className="p-6">
+
+      <div className="p-6 flex flex-col flex-grow">
         {/* Categories */}
         {post.categories && post.categories.length > 0 && (
-          <div className="flex items-center gap-2 mb-3 text-sm">
-            <FolderTree className="w-4 h-4 text-blue-500" />
+          <div className="flex items-center gap-2 text-sm mb-3">
+            <FolderTree className="w-4 h-4 text-blue-500 shrink-0" />
             <div className="flex flex-wrap gap-2">
               {post.categories.map(category => (
                 <Link
@@ -47,17 +51,21 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
           </div>
         )}
 
-        <h2 className="text-xl font-semibold mb-3 group-hover:text-blue-500 transition-colors">
+        {/* Title */}
+        <h2 className="text-lg font-semibold mb-3 group-hover:text-blue-500 transition-colors line-clamp-2">
           <Link to={`/blog/${post.slug}`}>
             {post.title}
           </Link>
         </h2>
 
-        <p className="text-slate-600 dark:text-slate-300 mb-4 line-clamp-2">
+        {/* Excerpt */}
+        <p className="text-slate-600 dark:text-slate-300 text-sm mb-4 line-clamp-2 flex-grow">
           {post.excerpt}
         </p>
 
-        <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+        {/* Tags and Date */}
+        <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-400 mt-auto">
+          {/* Date */}
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
             <time dateTime={post.created_at}>
@@ -65,15 +73,16 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
             </time>
           </div>
 
+          {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <Tag className="w-4 h-4" />
               <div className="flex flex-wrap gap-2">
                 {post.tags.map(tag => (
                   <Link
                     key={tag}
                     to={`/blog?tag=${encodeURIComponent(tag)}`}
-                    className="hover:text-blue-500 transition-colors"
+                    className="hover:text-blue-500 dark:hover:text-blue-400"
                   >
                     #{tag}
                   </Link>

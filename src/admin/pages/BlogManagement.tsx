@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { BlogPost, BlogPostInput } from '../../types/blog';
-import { BlogPostForm } from '../../components/blog/BlogPostForm';
-import { BlogPostList } from '../../components/blog/BlogPostList';
-import { blogService } from '../../services/blogService';
+import { BlogPostForm } from '../components/BlogPostForm';
+import { BlogPostList } from '../components/BlogPostList';
+import { blogService } from '../services/blogService';
 
 export default function BlogManagement() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -11,16 +11,20 @@ export default function BlogManagement() {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const POSTS_PER_PAGE = 10;
 
   useEffect(() => {
     loadPosts();
-  }, []);
+  }, [page]);
 
   const loadPosts = async () => {
     try {
       setLoading(true);
-      const fetchedPosts = await blogService.getPosts();
-      setPosts(fetchedPosts);
+      const response = await blogService.getPosts({ page, limit: POSTS_PER_PAGE });
+      setPosts(response.items);
+      setTotalPages(response.totalPages);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load posts');
     } finally {
@@ -77,7 +81,8 @@ export default function BlogManagement() {
       excerpt: post.excerpt,
       featured_image: post.featured_image,
       status: post.status,
-      tags: post.tags || [], // Pass the post's tags
+      tags: post.tags || [],
+      category_ids: post.categories?.map(cat => cat.id) || []
     };
   };
 
@@ -139,15 +144,38 @@ export default function BlogManagement() {
               />
             </div>
           ) : (
-            <BlogPostList
-              posts={posts}
-              onEdit={handleEdit}
-              onDelete={handleDeletePost}
-              onView={(post) => {
-                const url = new URL(`/blog/${post.slug}`, window.location.origin);
-                window.open(url.toString(), '_blank', 'noopener,noreferrer');
-              }}
-            />
+            <>
+              <BlogPostList
+                posts={posts}
+                onEdit={handleEdit}
+                onDelete={handleDeletePost}
+                onView={(post) => {
+                  const url = new URL(`/blog/${post.slug}`, window.location.origin);
+                  window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                }}
+              />
+              {totalPages > 1 && (
+                <div className="mt-6 flex justify-center space-x-2">
+                  <button
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                    className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  <span className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+                    Page {page} of {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                    className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

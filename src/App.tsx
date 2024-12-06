@@ -5,17 +5,17 @@ import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { TopNavigation } from './components/layout/TopNavigation';
 import { Footer } from './components/layout/Footer';
-import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { ProtectedRoute } from './admin/components/ProtectedRoute';
 
 // Lazy load pages
 const Home = React.lazy(() => import('./pages/Home'));
 const About = React.lazy(() => import('./pages/About'));
 const Blog = React.lazy(() => import('./pages/Blog'));
 const Contact = React.lazy(() => import('./pages/Contact'));
-const AdminLogin = React.lazy(() => import('./pages/admin/Login'));
-const AdminDashboard = React.lazy(() => import('./pages/admin/Dashboard'));
-const BlogManagement = React.lazy(() => import('./pages/admin/BlogManagement'));
-const CategoryManagement = React.lazy(() => import('./pages/admin/CategoryManagement'));
+const Login = React.lazy(() => import('./admin/pages/Login'));
+const Dashboard = React.lazy(() => import('./admin/pages/Dashboard'));
+const BlogManagement = React.lazy(() => import('./admin/pages/BlogManagement'));
+const CategoryManagement = React.lazy(() => import('./admin/pages/CategoryManagement'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 
 // Loading component
@@ -84,12 +84,12 @@ function App() {
                       <Route path="/blog" element={<Blog />} />
                       <Route path="/blog/:slug" element={<BlogPost />} />
                       <Route path="/contact" element={<Contact />} />
-                      <Route path="/admin/login" element={<AdminLogin />} />
+                      <Route path="/admin/login" element={<Login />} />
                       <Route 
                         path="/admin/dashboard" 
                         element={
                           <ProtectedRoute>
-                            <AdminDashboard />
+                            <Dashboard />
                           </ProtectedRoute>
                         } 
                       />
@@ -109,7 +109,6 @@ function App() {
                           </ProtectedRoute>
                         } 
                       />
-                      <Route path="/admin/categories" element={<CategoryManagement />} />
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </Suspense>

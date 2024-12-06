@@ -1,169 +1,48 @@
-import { BlogPost, BlogPostInput } from '../types/blog';
+import axios from 'axios';
+import { BlogPost } from '../types/blog';
+import { API_ENDPOINTS } from '../config/api';
 
-const API_URL = 'http://localhost:3002/api'; // Fixed SQLite server URL
+interface PaginatedResponse {
+  posts: BlogPost[];
+  total: number;
+  page: number;
+  limit: number;
+}
 
 export const blogService = {
-  async getPosts(): Promise<BlogPost[]> {
-    try {
-      const response = await fetch(`${API_URL}/posts`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch posts');
-      }
-      return response.json();
-    } catch (error) {
-      console.error('Error in getPosts:', error);
-      throw error;
+  getPosts: async (page: number = 1, limit: number = 20): Promise<PaginatedResponse> => {
+    const response = await axios.get(API_ENDPOINTS.POSTS.LIST);
+    
+    // If the API returns an array (non-paginated), convert it to paginated format
+    if (Array.isArray(response.data)) {
+      const allPosts = response.data;
+      const start = (page - 1) * limit;
+      const end = start + limit;
+      
+      return {
+        posts: allPosts.slice(start, end),
+        total: allPosts.length,
+        page,
+        limit
+      };
     }
+    
+    // If it's already paginated, return as is
+    return response.data;
   },
 
-  async getPost(id: number): Promise<BlogPost> {
-    try {
-      const response = await fetch(`${API_URL}/posts/${id}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch post');
-      }
-      const post = await response.json();
-      
-      // Ensure category_ids is properly formatted
-      if (post.categories) {
-        post.category_ids = post.categories.map((cat: Category) => cat.id);
-      }
-      
-      return post;
-    } catch (error) {
-      console.error('Error in getPost:', error);
-      throw error;
-    }
+  getPostBySlug: async (slug: string): Promise<BlogPost> => {
+    const response = await axios.get(API_ENDPOINTS.POSTS.GET_BY_SLUG(slug));
+    return response.data;
   },
 
-  async getPostBySlug(slug: string): Promise<BlogPost> {
-    try {
-      console.log('Fetching post with slug:', slug);
-      const response = await fetch(`${API_URL}/posts/slug/${slug}`);
-      console.log('Response:', response);
-      
-      if (!response.ok) {
-        const text = await response.text();
-        console.error('Error response:', text);
-        throw new Error(text || 'Failed to fetch post');
-      }
-      
-      const post = await response.json();
-      
-      // Ensure category_ids is properly formatted
-      if (post.categories) {
-        post.category_ids = post.categories.map((cat: Category) => cat.id);
-      }
-      
-      console.log('Fetched post:', post);
-      return post;
-    } catch (error) {
-      console.error('Error in getPostBySlug:', error);
-      throw error;
-    }
+  getPostsByCategory: async (categoryId: number): Promise<BlogPost[]> => {
+    const response = await axios.get(`${API_ENDPOINTS.POSTS.LIST}/category/${categoryId}`);
+    return response.data;
   },
 
-  async createPost(data: BlogPostInput): Promise<BlogPost> {
-    try {
-      const formData = new FormData();
-      
-      // Add all fields to FormData
-      formData.append('title', data.title);
-      formData.append('content', data.content || '');
-      formData.append('excerpt', data.excerpt || '');
-      formData.append('status', data.status || 'draft');
-      
-      // Handle featured image
-      if (data.featured_image instanceof File) {
-        formData.append('featured_image', data.featured_image);
-      }
-      
-      // Handle tags - ensure it's sent as a JSON string array
-      if (Array.isArray(data.tags)) {
-        formData.append('tags', JSON.stringify(data.tags));
-      }
-      
-      // Handle category_ids - ensure it's sent as a JSON string array of numbers
-      if (Array.isArray(data.category_ids)) {
-        const categoryIds = data.category_ids.map(id => 
-          typeof id === 'string' ? parseInt(id, 10) : id
-        );
-        formData.append('category_ids', JSON.stringify(categoryIds));
-      }
-
-      const response = await fetch(`${API_URL}/posts`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Failed to create post');
-      }
-      return response.json();
-    } catch (error) {
-      console.error('Error in createPost:', error);
-      throw error;
-    }
-  },
-
-  async updatePost(id: number, data: BlogPostInput): Promise<BlogPost> {
-    try {
-      console.log('Updating post with data:', data);
-      const formData = new FormData();
-      
-      // Add all fields to FormData
-      formData.append('title', data.title);
-      formData.append('content', data.content || '');
-      formData.append('excerpt', data.excerpt || '');
-      formData.append('status', data.status || 'draft');
-      
-      // Handle featured image
-      if (data.featured_image instanceof File) {
-        formData.append('featured_image', data.featured_image);
-      }
-      
-      // Handle tags - ensure it's sent as a JSON string array
-      if (Array.isArray(data.tags)) {
-        formData.append('tags', JSON.stringify(data.tags));
-      }
-      
-      // Handle category_ids - ensure it's sent as a JSON string array of numbers
-      if (Array.isArray(data.category_ids)) {
-        const categoryIds = data.category_ids.map(id => 
-          typeof id === 'string' ? parseInt(id, 10) : id
-        );
-        formData.append('category_ids', JSON.stringify(categoryIds));
-      }
-
-      const response = await fetch(`${API_URL}/posts/${id}`, {
-        method: 'PUT',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Failed to update post');
-      }
-      return response.json();
-    } catch (error) {
-      console.error('Error in updatePost:', error);
-      throw error;
-    }
-  },
-
-  async deletePost(id: number): Promise<void> {
-    try {
-      const response = await fetch(`${API_URL}/posts/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete post');
-      }
-    } catch (error) {
-      console.error('Error in deletePost:', error);
-      throw error;
-    }
-  },
+  getPostsByTag: async (tag: string): Promise<BlogPost[]> => {
+    const response = await axios.get(`${API_ENDPOINTS.POSTS.LIST}/tag/${tag}`);
+    return response.data;
+  }
 };

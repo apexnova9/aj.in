@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { PlusCircle, Edit2, Trash2, ChevronRight, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { Category } from '../../types/blog';
-import { categoryService } from '../../services/categoryService';
+import { categoryService } from '../services/categoryService';
 
 interface CategoryFormData {
   name: string;
